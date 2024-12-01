@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import InputError from "../components/InputError";
 import TextInput from "../components/TextInput";
 import InputLabel from "../components/InputLabel";
 import TextArea from "../components/TextArea";
+import emailjs from "@emailjs/browser";
+import Modal from "../components/Modal";
 
 const Contact = () => {
-  const handleSendMessage = (values) => {
-    console.log("Form submitted:", values);
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState("success");
 
   const formik = useFormik({
     initialValues: {
@@ -32,7 +35,36 @@ const Contact = () => {
         .min(10, "Message must be at least 10 characters")
         .max(500, "Message cannot exceed 500 characters"),
     }),
-    onSubmit: handleSendMessage,
+    onSubmit: (values, { resetForm }) => {
+      const templateParams = {
+        from_name: values.name,
+        from_email: values.email,
+        to_name: "Amin Abdillah",
+        message: values.message,
+      };
+
+      emailjs
+        .send("my_portfolio", "template_gqerwxr", templateParams, {
+          publicKey: "IbAI6dqRBxQejN0HU",
+        })
+        .then(
+          () => {
+            setModalType("success");
+            setModalMessage("Your message has been sent successfully!");
+            resetForm();
+          },
+          (error) => {
+            setModalType("error");
+            setModalMessage(
+              "Failed to send the message. Please try again later.",
+            );
+            console.log("FAILED...", error.text);
+          },
+        )
+        .finally(() => {
+          setIsModalOpen(true);
+        });
+    },
   });
 
   return (
@@ -99,6 +131,29 @@ const Contact = () => {
           </div>
         </form>
       </div>
+
+      <Modal
+        show={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        maxWidth="md"
+      >
+        <div className="p-4">
+          <h2
+            className={`text-center text-xl font-semibold ${modalType === "success" ? "text-green-600" : "text-red-600"}`}
+          >
+            {modalType === "success" ? "Success" : "Error"}
+          </h2>
+          <p className="mt-4 text-center">{modalMessage}</p>
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:bg-primary/80"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
