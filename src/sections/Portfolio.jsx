@@ -1,8 +1,20 @@
+import { useState } from "react";
 import Data from "../data/portfolioData.json";
+import Modal from "../components/Modal";
 
 const images = import.meta.glob("../assets/portfolio/*", { eager: true });
 
 const Portfolio = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleLinkClick = (link) => {
+    if (!link) {
+      setIsModalOpen(true);
+    } else {
+      window.open(link, "_blank");
+    }
+  };
+
   return (
     <div id="portfolio" className="mx-auto max-w-screen-2xl px-8 py-24">
       <h1 className="mb-16 text-center text-2xl font-semibold text-gray-400">
@@ -32,16 +44,41 @@ const Portfolio = () => {
                 {item.description}
               </p>
               <div>
-                <a href={item.link} target="_blank">
-                  <button className="rounded-full border border-primary px-7 py-3 text-primary hover:bg-primary hover:text-white">
-                    View Site
-                  </button>
-                </a>
+                <button
+                  onClick={() => handleLinkClick(item.link)}
+                  className="rounded-full border border-primary px-7 py-3 text-primary hover:bg-primary hover:text-white"
+                >
+                  View Site
+                </button>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      <Modal
+        show={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        maxWidth="md"
+      >
+        <div className="p-4">
+          <h2 className="text-center text-xl font-semibold text-red-600">
+            This web app is still in development and running on a localhost.
+          </h2>
+          <p className="mt-4 text-center">
+            The website you’re trying to view is currently under development and
+            can only be accessed locally.
+          </p>
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:bg-primary/80"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
