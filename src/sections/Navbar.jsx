@@ -27,12 +27,12 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-[9999] w-screen bg-primary">
-      <div
-        className={`mx-auto flex max-w-screen-2xl justify-between px-8 text-white transition-[padding-top,padding-bottom] duration-1000 ease-in-out md:px-16 lg:px-32 ${
-          isScrolled ? "py-4 drop-shadow" : "py-8"
-        }`}
-      >
+    <nav
+      className={`fixed left-0 right-0 top-0 z-[9999] w-screen bg-primary transition-[padding-top,padding-bottom] duration-1000 ease-in-out ${
+        isScrolled ? "py-4 drop-shadow" : "py-8"
+      }`}
+    >
+      <div className="mx-auto flex max-w-screen-2xl justify-between px-8 text-white md:px-16 lg:px-32">
         <div className="flex items-center gap-2">
           <img className="h-4 w-4" src={Logo} alt="logo" />
           <span className="text-lg font-bold">andi.id</span>
