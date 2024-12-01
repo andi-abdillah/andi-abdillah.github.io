@@ -1,0 +1,37 @@
+[
+  {
+    "name": "CSIRT Ticketing System",
+    "description": "A streamlined ticketing system developed for BangkalanKab-CSIRT to enhance issue reporting and resolution, ensuring efficient and secure communication between users and the support team.",
+    "image": "tiket-bangkalankab.png",
+    "year": "2024",
+    "link": "https://tiket.bangkalankab.go.id/"
+  },
+  {
+    "name": "CSIRT Web Profile",
+    "description": "An official web profile for BangkalanKab-CSIRT, showcasing its mission, services, and achievements in cybersecurity.",
+    "image": "csirt-bangkalankab.png",
+    "year": "2024",
+    "link": "https://csirt.bangkalankab.go.id"
+  },
+  {
+    "name": "Pen & Paper",
+    "description": "A web-based social media platform that allows users to connect, share, and engage in conversations through written content. Pen & Paper aims to provide a simple and intuitive platform for creative expression, connecting individuals through storytelling and discussions.",
+    "image": "pen-paper.png",
+    "year": "2023",
+    "link": ""
+  },
+  {
+    "name": "Point of Sale (POS) System",
+    "description": "A Point of Sale (POS) system designed for selling food at a restaurant named Omah Jawa. The platform enables efficient order management, sales tracking, and customer service for the restaurant, enhancing the overall dining experience.",
+    "image": "omah-jawa.png",
+    "year": "2023",
+    "link": ""
+  },
+  {
+    "name": "Snake Game",
+    "description": "Snake game is a game concept where the player controls a snake that grows in length, with the snake's body itself being the main obstacle.",
+    "image": "snake-game.png",
+    "year": "2022",
+    "link": "https://andi-abdillah.github.io/snake-game/"
+  }
+]
