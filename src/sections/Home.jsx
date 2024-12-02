@@ -5,7 +5,7 @@ const Home = () => {
     <section id="home" className="relative max-h-screen bg-primary px-8 py-12">
       <div className="m-auto flex max-w-screen-2xl gap-8 py-28 md:px-8 lg:px-28">
         <div className="m-auto space-y-6 text-center md:text-start">
-          <h1 className="text-xl font-bold uppercase text-white md:text-4xl">
+          <h1 className="text-3xl font-semibold uppercase text-white sm:font-bold md:text-4xl">
             Front end web developer
           </h1>
           <h2 className="text-xl font-medium text-gray-300">
