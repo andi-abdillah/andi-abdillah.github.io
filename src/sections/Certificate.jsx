@@ -5,7 +5,7 @@ const images = import.meta.glob("../assets/certificates/*", { eager: true });
 
 const Certificate = () => {
   return (
-    <div id="certificates" className="px-8 py-24">
+    <section id="certificates" className="px-8 py-24">
       <h1 className="text-center text-2xl font-semibold text-gray-400">
         Licenses & Certifications
       </h1>
@@ -31,7 +31,7 @@ const Certificate = () => {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

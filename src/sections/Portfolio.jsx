@@ -16,7 +16,7 @@ const Portfolio = () => {
   };
 
   return (
-    <div id="portfolio" className="mx-auto max-w-screen-2xl px-8 py-24">
+    <section id="portfolio" className="mx-auto max-w-screen-2xl px-8 py-24">
       <h1 className="mb-16 text-center text-2xl font-semibold text-gray-400">
         A Lovely Selection of Work
       </h1>
@@ -28,7 +28,7 @@ const Portfolio = () => {
           >
             <div>
               <img
-                className="h-44 md:h-64 lg:h-72"
+                className="m-auto h-44 md:h-64 lg:h-72"
                 src={images[`../assets/portfolio/${item.image}`]?.default || ""}
                 alt={item.name}
               />
@@ -79,7 +79,7 @@ const Portfolio = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </section>
   );
 };
 

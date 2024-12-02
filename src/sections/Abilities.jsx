@@ -28,7 +28,7 @@ const Abilities = () => {
   ];
 
   return (
-    <div id="abilities" className="bg-primary px-2 py-24">
+    <section id="abilities" className="bg-primary px-2 py-24">
       <h1 className="mb-16 text-center text-3xl font-semibold text-gray-300">
         Abilities
       </h1>
@@ -55,7 +55,7 @@ const Abilities = () => {
           </ul>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

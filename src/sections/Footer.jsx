@@ -19,7 +19,7 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <div className="bg-primary px-8 pb-2 pt-10">
+    <section className="bg-primary px-8 pb-2 pt-10">
       <div className="flex w-full justify-center gap-6 text-gray-600">
         {socialLinks.map((link, index) => (
           <a key={index} href={link.href} target="_blank" rel="noreferrer">
@@ -38,7 +38,7 @@ const Footer = () => {
           amin_abdillah
         </h3>
       </div>
-    </div>
+    </section>
   );
 };
 

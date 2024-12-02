@@ -68,7 +68,7 @@ const Contact = () => {
   });
 
   return (
-    <div id="contact" className="px-8 py-24">
+    <section id="contact" className="px-8 py-24">
       <h1 className="mb-16 text-center text-4xl font-bold font-semibold">
         Get in touch
       </h1>
@@ -154,7 +154,7 @@ const Contact = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </section>
   );
 };
 

@@ -1,23 +1,11 @@
 import { useEffect, useState } from "react";
 import Logo from "../assets/logo.png";
-import { IoMenu } from "react-icons/io5";
-import { IoClose } from "react-icons/io5";
+import { IoMenu, IoClose } from "react-icons/io5";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleOnScroll = () => {
-    const scrollTop = window.scrollY;
-    setIsScrolled(scrollTop > 50);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleOnScroll);
-    return () => {
-      window.removeEventListener("scroll", handleOnScroll);
-    };
-  }, []);
 
   const menuItems = [
     { label: "home" },
@@ -25,6 +13,33 @@ const Navbar = () => {
     { label: "portfolio" },
     { label: "contact" },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = menuItems.map((item) =>
+        document.getElementById(item.label),
+      );
+      let current = "";
+
+      sections.forEach((section) => {
+        if (section) {
+          const sectionTop = section.offsetTop;
+          if (window.pageYOffset >= sectionTop - 100) {
+            current = section.getAttribute("id");
+          }
+        }
+      });
+
+      setActiveSection(current);
+
+      setIsScrolled(window.pageYOffset > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <nav
@@ -43,7 +58,11 @@ const Navbar = () => {
             <li key={index}>
               <a
                 href={`#${item.label}`}
-                className="uppercase hover:text-secondary"
+                className={`uppercase ${
+                  activeSection === item.label
+                    ? "text-secondary"
+                    : "hover:text-secondary"
+                }`}
               >
                 {item.label}
               </a>
@@ -63,7 +82,11 @@ const Navbar = () => {
             <li key={index}>
               <a
                 href={`#${item.label}`}
-                className="font-semibold hover:text-secondary"
+                className={`font-semibold ${
+                  activeSection === item.label
+                    ? "text-secondary"
+                    : "hover:text-secondary"
+                }`}
                 onClick={() => setIsOpen(false)}
               >
                 {item.label}

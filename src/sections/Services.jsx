@@ -59,7 +59,7 @@ const data = [
 
 const Services = () => {
   return (
-    <div id="services" className="mx-auto max-w-screen-2xl py-24">
+    <section id="services" className="mx-auto max-w-screen-2xl py-24">
       <h1 className="text-center text-2xl font-semibold text-gray-400">
         Services
       </h1>
@@ -82,7 +82,7 @@ const Services = () => {
           </div>
         ))}
       </Carousel>
-    </div>
+    </section>
   );
 };
 
