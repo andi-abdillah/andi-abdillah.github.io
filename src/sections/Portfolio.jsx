@@ -72,7 +72,7 @@ const Portfolio = () => {
           <div className="mt-6 flex justify-center">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:bg-primary/80"
+              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:opacity-50"
             >
               Close
             </button>

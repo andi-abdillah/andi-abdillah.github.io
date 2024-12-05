@@ -67,6 +67,14 @@ const Contact = () => {
     },
   });
 
+  const hasErrors = Object.keys(formik.errors).length > 0;
+
+  const hasFilledValues = Object.values(formik.values).some(
+    (value) => value !== "" && value !== null && value !== undefined,
+  );
+
+  console.log(hasFilledValues);
+
   return (
     <section id="contact" className="px-8 py-24">
       <h1 className="mb-16 text-center text-4xl font-bold font-semibold">
@@ -121,13 +129,25 @@ const Contact = () => {
             )}
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center gap-3">
             <button
               type="submit"
-              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:bg-primary/80"
+              disabled={hasErrors}
+              className={`rounded-full bg-primary px-7 py-3 font-semibold text-white hover:bg-primary/80 ${
+                hasErrors && "cursor-not-allowed opacity-50"
+              }`}
             >
               Send
             </button>
+
+            {hasFilledValues && (
+              <button
+                className="rounded-full bg-red-500 px-7 py-3 font-semibold text-white hover:opacity-50"
+                onClick={() => formik.resetForm()}
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </form>
       </div>
