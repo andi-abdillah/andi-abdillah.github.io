@@ -53,12 +53,11 @@ const Contact = () => {
             setModalMessage("Your message has been sent successfully!");
             resetForm();
           },
-          (error) => {
+          () => {
             setModalType("error");
             setModalMessage(
               "Failed to send the message. Please try again later.",
             );
-            console.log("FAILED...", error.text);
           },
         )
         .finally(() => {
@@ -72,8 +71,6 @@ const Contact = () => {
   const hasFilledValues = Object.values(formik.values).some(
     (value) => value !== "" && value !== null && value !== undefined,
   );
-
-  console.log(hasFilledValues);
 
   return (
     <section id="contact" className="px-8 py-24">
@@ -167,7 +164,7 @@ const Contact = () => {
           <div className="mt-6 flex justify-center">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:bg-primary/80"
+              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:opacity-50"
             >
               Close
             </button>

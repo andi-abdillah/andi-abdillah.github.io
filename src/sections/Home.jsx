@@ -6,12 +6,13 @@ const Home = () => {
       <div className="m-auto flex max-w-screen-2xl gap-8 py-28 md:px-8 lg:px-28">
         <div className="m-auto space-y-6 text-center md:text-start">
           <h1 className="text-3xl font-semibold uppercase text-white sm:font-bold md:text-4xl">
-            Front end web developer
+            Web Developer
           </h1>
           <h2 className="text-xl font-medium text-gray-300">
-            Hi! I’m Amin Abdillah, a front-end web developer based in Gresik,
-            East Java, Indonesia. I love music, coding and watching random
-            youtube videos.
+            Hi! I’m Amin Abdillah, a web developer based in Gresik, East Java,
+            Indonesia. I specialize in crafting responsive, high-performance
+            websites using modern technologies like Laravel, Next.js, and
+            Tailwind CSS.
           </h2>
           <h3 className="font-semibold uppercase text-secondary md:text-xl">
             Working Hard To Make The Internet Awesome

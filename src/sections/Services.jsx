@@ -3,8 +3,8 @@ import "react-multi-carousel/lib/styles.css";
 import { CgWebsite } from "react-icons/cg";
 import { MdCameraFront } from "react-icons/md";
 import { BsPersonBadge } from "react-icons/bs";
-import { RiReactjsLine } from "react-icons/ri";
-import { SiLaravel } from "react-icons/si";
+import { RiNextjsFill } from "react-icons/ri";
+import { IoLogoLaravel } from "react-icons/io5";
 
 const responsive = {
   superLargeDesktop: {
@@ -27,33 +27,34 @@ const responsive = {
 
 const data = [
   {
-    title: "design + development",
+    title: "Design & Development",
     icon: CgWebsite,
-    description: "Clean website, modern designs - optimized for performance.",
+    description:
+      "I build modern, fast-loading websites with clean UI and clean code — optimized for SEO and performance.",
   },
   {
-    title: "mobile friendly",
+    title: "Mobile-First Design",
     icon: MdCameraFront,
     description:
-      "A responsive design makes your website accessible to all users, regardless of their device.",
+      "Your website will look and function perfectly on all devices — responsive from the start.",
   },
   {
-    title: "build your personal website",
+    title: "Personal Branding Website",
     icon: BsPersonBadge,
     description:
-      "Personal website can helping you market your skills and talents and in building your career.",
+      "A custom personal website that elevates your brand, showcases your skills, and builds online credibility.",
   },
   {
-    title: "React JS Development",
-    icon: RiReactjsLine,
+    title: "Next.js Development",
+    icon: RiNextjsFill,
     description:
-      "React JS is renowned for its extensibility, adjustability, and convenience.",
+      "Build fast, SEO-friendly, and scalable web applications using the power of Next.js and modern web standards.",
   },
   {
-    title: "Laravel Development",
-    icon: SiLaravel,
+    title: "Laravel Back-End Solutions",
+    icon: IoLogoLaravel,
     description:
-      "Laravel is a powerful PHP framework known for its elegant syntax, scalability, and performance.",
+      "Powerful, secure APIs and backend logic using Laravel — perfect for dashboards, auth systems, and data apps.",
   },
 ];
 
