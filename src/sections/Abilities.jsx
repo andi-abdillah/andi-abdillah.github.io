@@ -1,23 +1,45 @@
-import { TbBrandHtml5 } from "react-icons/tb";
-import { TbBrandGithub } from "react-icons/tb";
+import { TbBrandHtml5, TbServer, TbBrandGithub, TbCloud } from "react-icons/tb";
+
+const SkillCard = ({ title, items, icon }) => (
+  <div className="group relative h-full w-full">
+    <div className="absolute inset-0 rounded-3xl bg-black/20 shadow-xl transition duration-300 ease-in-out group-hover:rotate-[-5deg]" />
+
+    <div className="relative h-full rounded-3xl bg-white p-6 text-center transition duration-300 ease-in-out group-hover:rotate-[5deg]">
+      <div className="mb-4 flex justify-center text-6xl text-primary">
+        {icon}
+      </div>
+      <h2 className="mb-2 text-xl font-semibold">{title}</h2>
+      <ul className="space-y-1 text-gray-500">
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+);
 
 const Abilities = () => {
-  const skills = [
+  const frontendSkills = [
     "HTML",
     "CSS",
     "Sass / SCSS",
     "Bootstrap",
     "Tailwind CSS",
-    "PHP",
     "JavaScript",
     "TypeScript",
-    "Laravel",
     "React.js",
     "Inertia.js",
     "Next.js",
+  ];
+
+  const backendSkills = [
+    "PHP",
+    "Laravel",
+    "Express.js",
+    "Hapi.js",
+    "Sequelize",
+    "Prisma",
     "MySQL",
-    "Cloud Computing",
-    "Scrum",
   ];
 
   const devTools = [
@@ -29,33 +51,26 @@ const Abilities = () => {
     "Terminal",
   ];
 
+  const otherSkills = ["Cloud Computing", "Scrum"];
+
   return (
-    <section id="abilities" className="bg-primary px-2 py-24">
+    <section id="abilities" className="bg-primary px-10 py-24">
       <h1 className="mb-16 text-center text-3xl font-semibold text-gray-300">
         Abilities
       </h1>
-      <div className="mx-auto flex max-w-xl justify-evenly rounded-xl bg-white shadow-xl">
-        <div className="w-1/2 p-10 text-center">
-          <TbBrandHtml5 className="mx-auto text-7xl text-primary" />
-          <h1 className="my-3 text-2xl font-semibold">Skills</h1>
-          <ul className="space-y-2 text-gray-500">
-            {skills.map((skill, index) => (
-              <li key={index}>{skill}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="w-px bg-black opacity-15" />
-
-        <div className="w-1/2 p-10 text-center">
-          <TbBrandGithub className="mx-auto text-7xl text-primary" />
-          <h1 className="my-3 text-2xl font-semibold">Dev Tools</h1>
-          <ul className="space-y-2 text-gray-500">
-            {devTools.map((tool, index) => (
-              <li key={index}>{tool}</li>
-            ))}
-          </ul>
-        </div>
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <SkillCard
+          title="Frontend"
+          items={frontendSkills}
+          icon={<TbBrandHtml5 />}
+        />
+        <SkillCard title="Backend" items={backendSkills} icon={<TbServer />} />
+        <SkillCard
+          title="Dev Tools"
+          items={devTools}
+          icon={<TbBrandGithub />}
+        />
+        <SkillCard title="Other" items={otherSkills} icon={<TbCloud />} />
       </div>
     </section>
   );
