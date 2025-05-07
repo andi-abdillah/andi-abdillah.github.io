@@ -17,9 +17,11 @@ const Certificate = () => {
               src={images[`../assets/certificates/${item.logo}`]?.default || ""}
               alt={item.name}
             />
-            <div>
-              <h4 className="font-semibold text-gray-800">{item.name}</h4>
-              <p className="font-light text-gray-600">{item.organization}</p>
+            <div className="flex flex-col">
+              <div className="flex-1">
+                <h4 className="font-semibold text-gray-800">{item.name}</h4>
+                <p className="font-light text-gray-600">{item.organization}</p>
+              </div>
               <div className="mt-4">
                 <a href={item.url} target="_blank">
                   <button className="flex items-center gap-1 rounded-full border border-primary px-7 py-1.5 text-primary hover:bg-primary hover:text-white">
