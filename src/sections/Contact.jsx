@@ -7,11 +7,13 @@ import InputLabel from "../components/InputLabel";
 import TextArea from "../components/TextArea";
 import emailjs from "@emailjs/browser";
 import Modal from "../components/Modal";
+import { TbLoader2 } from "react-icons/tb";
 
 const Contact = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState("success");
+  const [isSending, setIsSending] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -36,6 +38,7 @@ const Contact = () => {
         .max(500, "Message cannot exceed 500 characters"),
     }),
     onSubmit: (values, { resetForm }) => {
+      setIsSending(true);
       const templateParams = {
         from_name: values.name,
         from_email: values.email,
@@ -47,20 +50,19 @@ const Contact = () => {
         .send("my_portfolio", "template_gqerwxr", templateParams, {
           publicKey: "IbAI6dqRBxQejN0HU",
         })
-        .then(
-          () => {
-            setModalType("success");
-            setModalMessage("Your message has been sent successfully!");
-            resetForm();
-          },
-          () => {
-            setModalType("error");
-            setModalMessage(
-              "Failed to send the message. Please try again later.",
-            );
-          },
-        )
+        .then(() => {
+          setModalType("success");
+          setModalMessage("Your message has been sent successfully!");
+          resetForm();
+        })
+        .catch(() => {
+          setModalType("error");
+          setModalMessage(
+            "Failed to send the message. Please try again later.",
+          );
+        })
         .finally(() => {
+          setIsSending(false);
           setIsModalOpen(true);
         });
     },
@@ -89,6 +91,7 @@ const Contact = () => {
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                hasError={formik.touched.name && Boolean(formik.errors.name)}
                 autoComplete="name"
               />
               {formik.touched.name && (
@@ -105,6 +108,7 @@ const Contact = () => {
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                hasError={formik.touched.email && Boolean(formik.errors.email)}
                 autoComplete="email"
               />
               {formik.touched.email && (
@@ -120,6 +124,9 @@ const Contact = () => {
               value={formik.values.message}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              hasError={
+                formik.touched.message && Boolean(formik.errors.message)
+              }
             />
             {formik.touched.message && (
               <InputError className="mt-2" message={formik.errors.message} />
@@ -129,16 +136,24 @@ const Contact = () => {
           <div className="flex justify-center gap-3">
             <button
               type="submit"
-              disabled={hasErrors}
-              className={`rounded-full bg-primary px-7 py-3 font-semibold text-white hover:bg-primary/80 ${
-                hasErrors && "cursor-not-allowed opacity-50"
+              disabled={hasErrors || isSending}
+              className={`flex gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition hover:bg-primary/80 ${
+                (hasErrors || isSending) && "cursor-not-allowed opacity-50"
               }`}
             >
-              Send
+              {isSending ? (
+                <>
+                  {"Sending"}
+                  <TbLoader2 className="animate-spin text-2xl" />
+                </>
+              ) : (
+                "Send"
+              )}
             </button>
 
-            {hasFilledValues && (
+            {!isSending && hasFilledValues && (
               <button
+                type="button"
                 className="rounded-full bg-red-500 px-7 py-3 font-semibold text-white hover:opacity-50"
                 onClick={() => formik.resetForm()}
               >
