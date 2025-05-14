@@ -2,9 +2,8 @@ import { TbBrandHtml5, TbServer, TbBrandGithub, TbCloud } from "react-icons/tb";
 
 const SkillCard = ({ title, items, icon }) => (
   <div className="group relative h-full w-full">
-    <div className="absolute inset-0 rounded-3xl bg-black/20 shadow-xl transition duration-300 ease-in-out group-hover:rotate-[-5deg]" />
-
-    <div className="relative h-full rounded-3xl bg-white p-6 text-center transition duration-300 ease-in-out group-hover:rotate-[5deg]">
+    <div className="absolute inset-0 rounded-3xl ring ring-inset ring-white transition duration-300 ease-in-out group-hover:rotate-[7deg]" />
+    <div className="relative h-full rounded-3xl bg-white p-6 text-center transition duration-300 ease-in-out">
       <div className="mb-4 flex justify-center text-6xl text-primary">
         {icon}
       </div>
