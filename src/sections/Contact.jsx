@@ -150,7 +150,7 @@ const Contact = () => {
         </div>
 
         {/* Chat panel */}
-        <div className="flex h-[60vh] flex-col overflow-hidden rounded-3xl bg-[#161616] p-4 lg:col-span-2 lg:h-[520px]">
+        <div className="flex h-[75vh] flex-col overflow-hidden rounded-3xl bg-[#161616] p-4 lg:col-span-2 lg:h-[520px]">
           {/* Messages */}
           <div ref={scrollRef} className="chat-scroll flex-1 space-y-4 overflow-y-auto px-1 py-2">
             {messages.map((msg, i) =>
@@ -197,20 +197,20 @@ const Contact = () => {
 
           {/* Input + social — satu baris di desktop, icons di bawah di mobile */}
           <form onSubmit={handleSend} className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-center">
-            {/* Input + send */}
-            <div className="flex flex-1 items-center gap-2">
+            {/* Input + send — satu pill */}
+            <div className="flex flex-1 items-center gap-2 rounded-full bg-[#2a2a2a] pl-5 pr-1.5 py-1.5 focus-within:ring-2 focus-within:ring-primary">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Message..."
-                className="flex-1 rounded-full bg-[#2a2a2a] px-5 py-2.5 text-sm text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-primary"
+                className="flex-1 bg-transparent text-sm text-white placeholder-white/40 outline-none"
               />
               <button
                 type="submit"
                 aria-label="Send"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-opacity hover:opacity-80"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-opacity hover:opacity-80"
               >
-                <IoSend className="text-lg" />
+                <IoSend className="text-sm" />
               </button>
             </div>
             {/* Social icons — kiri desktop, bawah mobile */}

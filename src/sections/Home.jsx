@@ -104,10 +104,10 @@ const Home = () => {
             ref={(el) => (wrapperRefs.current[i] = el)}
             className={i >= 2 ? "mt-[-8vw] md:mt-0" : ""}
             style={{
-              width: "50%",
+              width: "55%",
               maxWidth: "clamp(200px, 24vw, 380px)",
               flexShrink: 0,
-              marginRight: i < CARDS.length - 1 ? "-12%" : 0,
+              marginRight: i < CARDS.length - 1 ? "-18%" : 0,
               zIndex: i + 1,
               transformOrigin: "50% 90%",
             }}
