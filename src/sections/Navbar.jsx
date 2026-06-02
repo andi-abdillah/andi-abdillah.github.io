@@ -4,6 +4,7 @@ import { IoMenu, IoClose } from "react-icons/io5";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -20,7 +21,6 @@ const Navbar = () => {
         document.getElementById(item.label),
       );
       let current = "";
-
       sections.forEach((section) => {
         if (section) {
           const sectionTop = section.offsetTop;
@@ -29,16 +29,14 @@ const Navbar = () => {
           }
         }
       });
-
       setActiveSection(current);
-
       setIsScrolled(window.pageYOffset > 50);
+      const homeHeight = document.getElementById("home")?.offsetHeight ?? window.innerHeight;
+      setIsVisible(window.pageYOffset > homeHeight * 0.6);
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -46,6 +44,12 @@ const Navbar = () => {
       className={`fixed left-0 right-0 top-0 z-[9999] w-screen bg-primary transition-[padding-top,padding-bottom] duration-1000 ease-in-out ${
         isScrolled ? "py-4 drop-shadow" : "py-8"
       }`}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translateY(0)" : "translateY(-100%)",
+        transition: "opacity 0.4s ease-out, transform 0.4s ease-out, padding 1s ease",
+        pointerEvents: isVisible ? "auto" : "none",
+      }}
     >
       <div className="mx-auto flex max-w-screen-2xl justify-between px-8 text-white md:px-16 lg:px-32">
         <div className="flex items-center gap-2">
@@ -53,7 +57,7 @@ const Navbar = () => {
           <span className="text-lg font-bold">andi.id</span>
         </div>
 
-        <ul className="hidden gap-10 font-semibold md:flex">
+        <ul className="hidden gap-10 font-futura font-semibold md:flex">
           {menuItems.map((item, index) => (
             <li key={index}>
               <a
@@ -77,7 +81,7 @@ const Navbar = () => {
         </button>
       </div>
       {isOpen && (
-        <ul className="space-y-6 py-6 text-center text-lg uppercase text-white md:hidden">
+        <ul className="space-y-6 py-6 text-center font-futura text-lg uppercase text-white md:hidden">
           {menuItems.map((item, index) => (
             <li key={index}>
               <a

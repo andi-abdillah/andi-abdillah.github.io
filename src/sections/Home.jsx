@@ -1,51 +1,146 @@
-import Image from "../assets/hero-image.png";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+const portfolioImages = import.meta.glob("../assets/portfolio/*", { eager: true });
+
+// Card 0 = paling bawah/belakang, card 3 = paling atas/depan
+const CARDS = [
+  { src: "csirt-bangkalankab.png", rotate: -12, ty: "5%",  phase: 0.0 },
+  { src: "tiket-bangkalankab.png", rotate: -2,  ty: "-6%", phase: 1.2 },
+  { src: "pen-paper.png",          rotate: 8,   ty: "5%",  phase: 2.4 },
+  { src: "puspetindo.png",         rotate: 12,  ty: "-4%", phase: 3.6 },
+];
+
+const lerp = (a, b, t) => a + (b - a) * t;
 
 const Home = () => {
+  const [mounted, setMounted] = useState(false);
+  const [cardsInView, setCardsInView] = useState(false);
+  const wrapperRefs = useRef([]);
+  const cardsRef    = useRef(null);
+  const currentY    = useRef(CARDS.map(() => 0));
+  const rafRef      = useRef(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 100);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setCardsInView(entry.isIntersecting),
+      { threshold: 0.2 },
+    );
+    if (cardsRef.current) observer.observe(cardsRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const animate = useCallback(() => {
+    const t = Date.now() / 1000;
+    CARDS.forEach((card, i) => {
+      const el = wrapperRefs.current[i];
+      if (!el) return;
+      const targetY = Math.sin(t * 0.7 + card.phase) * 10;
+      currentY.current[i] = lerp(currentY.current[i], targetY, 0.05);
+      el.style.transform = `rotate(${card.rotate}deg) translateY(${currentY.current[i].toFixed(2)}px)`;
+    });
+    rafRef.current = requestAnimationFrame(animate);
+  }, []);
+
+  useEffect(() => {
+    rafRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [animate]);
+
   return (
-    <section id="home" className="relative max-h-screen bg-primary px-8 py-12">
-      <div className="m-auto flex max-w-screen-2xl gap-8 py-28 md:px-8 lg:px-28">
-        <div className="m-auto space-y-6 text-center md:text-start">
-          <h1 className="text-3xl font-semibold uppercase text-white sm:font-bold md:text-4xl">
-            Web Developer
-          </h1>
-          <h2 className="text-xl font-medium text-gray-300">
-            Hi! I’m Amin Abdillah, a web developer based in Gresik, East Java,
-            Indonesia. I specialize in crafting responsive, high-performance
-            websites using modern technologies like Laravel, Next.js, and
-            Tailwind CSS.
-          </h2>
-          <h3 className="font-semibold uppercase text-secondary md:text-xl">
-            Working Hard To Make The Internet Awesome
-          </h3>
+    <section
+      id="home"
+      className="relative flex h-auto min-h-screen flex-col items-center overflow-hidden bg-primary px-8 pb-16 pt-16 text-center sm:min-h-0 sm:pt-10 md:pt-8 lg:min-h-screen"
+    >
+      {/* TOP + Name — rapat */}
+      <div
+        className="relative z-10 flex flex-col items-center gap-6 md:gap-3"
+        style={{ opacity: mounted ? 1 : 0, transition: "opacity 1.2s ease 0.25s" }}
+      >
+        <div className="flex flex-col items-center gap-1">
+          <p className="font-futura text-sm font-bold uppercase tracking-[0.09em] text-white">
+            Gresik, East Java, Indonesia
+          </p>
+          <p className="font-futura text-xs uppercase tracking-[0.09em] text-white/60">
+            aminabdillah.id@gmail.com
+          </p>
         </div>
-        <img
-          className="hidden h-64 md:flex lg:h-72"
-          src={Image}
-          alt="hero-image"
-        />
-      </div>
-      <div className="custom-shape-divider-bottom">
-        <svg
-          data-name="Layer 1"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
+
+        {/* Name */}
+        <h1
+          className="font-futura font-extrabold uppercase text-white"
+          style={{ fontSize: "max(3.8rem, 7vw)", letterSpacing: "-0.02em", lineHeight: 0.82 }}
         >
-          <path
-            d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
-            opacity=".25"
-            className="shape-fill"
-          ></path>
-          <path
-            d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z"
-            opacity=".5"
-            className="shape-fill"
-          ></path>
-          <path
-            d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"
-            className="shape-fill"
-          ></path>
-        </svg>
+          {["Amin", "Abdillah"].map((word, i) => (
+            <span key={i} className="inline-block">
+              {i > 0 && <span className="inline-block w-[0.3ch]" />}
+              <span
+                className="inline-block"
+                style={{
+                  transformOrigin: "bottom",
+                  transform: mounted ? "scaleY(1) translateY(0)" : "scaleY(0) translateY(0.25ch)",
+                  transition: mounted
+                    ? `transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 0.1}s`
+                    : "none",
+                }}
+              >
+                {word}
+              </span>
+            </span>
+          ))}
+        </h1>
+
+      </div>
+
+      {/* Cards — satu container, CSS handles mobile 2x2 vs desktop 4-in-a-row */}
+      <div ref={cardsRef} className="relative z-10 mt-14 flex flex-wrap justify-center md:flex-nowrap">
+        {CARDS.map((card, i) => (
+          <div
+            key={i}
+            ref={(el) => (wrapperRefs.current[i] = el)}
+            className={i >= 2 ? "mt-[-8vw] md:mt-0" : ""}
+            style={{
+              width: "50%",
+              maxWidth: "clamp(200px, 24vw, 380px)",
+              flexShrink: 0,
+              marginRight: i < CARDS.length - 1 ? "-12%" : 0,
+              zIndex: i + 1,
+              transformOrigin: "50% 90%",
+            }}
+          >
+            <div style={{ width: "100%", transform: cardsInView ? "scale(1)" : "scale(0)", transition: `transform 1s cubic-bezier(0.34,1.56,0.64,1) ${i * 0.08}s` }}>
+              <img
+                draggable="false"
+                src={portfolioImages[`../assets/portfolio/${card.src}`]?.default}
+                alt=""
+                style={{ width: "100%", display: "block", userSelect: "none", filter: "drop-shadow(0px 20px 40px rgba(0,0,0,0.4))" }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* BOT */}
+      <div
+        className="mt-14 flex flex-col items-center gap-1 lg:mt-auto"
+        style={{ opacity: mounted ? 1 : 0, transition: "opacity 1.2s ease 0.25s" }}
+      >
+        <p
+          className="font-futura font-extrabold uppercase"
+          style={{ color: "rgba(255,255,255,0.25)", fontSize: "max(3rem, 10vw)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
+        >
+          Web Developer
+        </p>
+        <p className="mt-2 font-futura text-sm font-bold uppercase tracking-[0.09em] text-white">
+          Technologies Include
+        </p>
+        <p className="font-futura text-xs uppercase tracking-[0.09em] text-white/60">
+          Laravel, Next.js, React.js, Tailwind CSS, TypeScript
+        </p>
       </div>
     </section>
   );
