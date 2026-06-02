@@ -435,14 +435,16 @@ const BottleFlipGame = ({ onBack }) => {
   );
 };
 
+
+
 /* ────────────────────────────────────────────────
    GAME SELECTION
 ──────────────────────────────────────────────── */
 const GAME_LIST = [
-  { id:"bottle", emoji:"🍾", title:"Bottle Flip",    desc:"Hold to charge, release to flip — land it standing up!" },
-  { id:"bug",    emoji:"🐛", title:"Catch the Bug",  desc:"Tap bugs before they escape — 30 sec, how many can you catch?" },
-  { id:"memory", emoji:"🃏", title:"Memory Card",    desc:"Flip and match all emoji pairs as fast as you can." },
-  { id:"code",   emoji:"🔍", title:"Code Breaker",   desc:"Guess the programming language from a code snippet." },
+  { id:"bottle", emoji:"🍾", title:"Bottle Flip",      desc:"Hold to charge, release to flip — land it standing up!" },
+  { id:"bug",    emoji:"🐛", title:"Catch the Bug",    desc:"Tap bugs before they escape — 30 sec, how many can you catch?" },
+  { id:"memory", emoji:"🃏", title:"Memory Card",      desc:"Flip and match all emoji pairs as fast as you can." },
+  { id:"code",   emoji:"🔍", title:"Code Breaker",     desc:"Guess the programming language from a code snippet." },
 ];
 
 const Games = () => {
@@ -471,10 +473,10 @@ const Games = () => {
       )}
 
       <div className="mx-auto max-w-3xl">
-        {activeGame==="bug"    && <CatchTheBugGame  onBack={()=>setActiveGame(null)} />}
-        {activeGame==="memory" && <MemoryCardGame   onBack={()=>setActiveGame(null)} />}
-        {activeGame==="code"   && <CodeBreakerGame  onBack={()=>setActiveGame(null)} />}
-        {activeGame==="bottle" && <BottleFlipGame   onBack={()=>setActiveGame(null)} />}
+        {activeGame==="bug"    && <CatchTheBugGame onBack={()=>setActiveGame(null)} />}
+        {activeGame==="memory" && <MemoryCardGame  onBack={()=>setActiveGame(null)} />}
+        {activeGame==="code"   && <CodeBreakerGame onBack={()=>setActiveGame(null)} />}
+        {activeGame==="bottle" && <BottleFlipGame  onBack={()=>setActiveGame(null)} />}
       </div>
     </section>
   );
