@@ -1,78 +1,105 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Data from "../data/portfolioData.json";
 import Modal from "../components/Modal";
 
 const images = import.meta.glob("../assets/portfolio/*", { eager: true });
 
-const Portfolio = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const ProjectItem = ({ item, onNoLink }) => {
+  const [inView, setInView] = useState(false);
+  const ref = useRef(null);
 
-  const handleLinkClick = (link) => {
-    if (!link) {
-      setIsModalOpen(true);
-    } else {
-      window.open(link, "_blank");
-    }
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.2 },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="mx-auto flex flex-col justify-evenly gap-5 lg:mx-0 lg:flex-row"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0px)" : "translateY(40px)",
+        transition: "opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
+      }}
+    >
+      <div>
+        <img
+          className="m-auto h-44 md:h-64 lg:h-72"
+          draggable="false"
+          src={images[`../assets/portfolio/${item.image}`]?.default || ""}
+          alt={item.name}
+        />
+      </div>
+
+      <div className="my-auto max-w-md space-y-5 text-center lg:text-start">
+        <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-center">
+          <h3 className="font-futura text-xl font-bold uppercase leading-none md:text-2xl">{item.name}</h3>
+          <span className="h-max w-max translate-y-[3px] rounded-lg bg-primary px-2 text-sm text-white">
+            {item.year}
+          </span>
+        </div>
+        <p className="font-medium opacity-40 md:text-lg">{item.description}</p>
+        <div>
+          <button
+            onClick={() => item.link ? window.open(item.link, "_blank") : onNoLink()}
+            className="rounded-full border border-primary px-7 py-3 font-futura uppercase text-primary hover:bg-primary hover:text-white"
+          >
+            View Site
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LINK_NOTE_CONTENT = {
+  localhost: {
+    title: "Running on Localhost",
+    description: "This project is still in development and can only be accessed locally.",
+  },
+  private: {
+    title: "Private Domain",
+    description: "This project is deployed on a private internal domain and is not publicly accessible.",
+  },
+};
+
+const Portfolio = () => {
+  const [linkNote, setLinkNote] = useState(null);
+  const lastLinkNote = useRef(null);
+  if (linkNote !== null) lastLinkNote.current = linkNote;
+
+  const content = LINK_NOTE_CONTENT[lastLinkNote.current] ?? LINK_NOTE_CONTENT.localhost;
 
   return (
     <section id="portfolio" className="mx-auto max-w-screen-2xl px-8 py-24">
-      <h1 className="mb-16 text-center text-2xl font-semibold text-gray-400">
+      <h1 className="mb-16 text-center font-futura text-5xl font-extrabold uppercase leading-tight [color:#363636]">
         A Lovely Selection of Work
       </h1>
       <div className="flex flex-col space-y-24">
         {Data.map((item, index) => (
-          <div
-            className="mx-auto flex flex-col justify-evenly gap-5 lg:mx-0 lg:flex-row"
+          <ProjectItem
             key={index}
-          >
-            <div>
-              <img
-                className="m-auto h-44 md:h-64 lg:h-72"
-                src={images[`../assets/portfolio/${item.image}`]?.default || ""}
-                alt={item.name}
-              />
-            </div>
-            <div className="my-auto max-w-md space-y-5 text-center lg:text-start">
-              <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-start">
-                <h3 className="text-xl font-bold md:text-2xl">{item.name}</h3>
-                <span className="my-auto h-max w-max rounded-lg bg-primary px-2 text-sm text-white">
-                  {item.year}
-                </span>
-              </div>
-              <p className="font-medium opacity-40 md:text-lg">
-                {item.description}
-              </p>
-              <div>
-                <button
-                  onClick={() => handleLinkClick(item.link)}
-                  className="rounded-full border border-primary px-7 py-3 text-primary hover:bg-primary hover:text-white"
-                >
-                  View Site
-                </button>
-              </div>
-            </div>
-          </div>
+            item={item}
+            onNoLink={() => setLinkNote(item.linkNote ?? "localhost")}
+          />
         ))}
       </div>
 
-      <Modal
-        show={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        maxWidth="md"
-      >
+      <Modal show={!!linkNote} onClose={() => setLinkNote(null)} maxWidth="md">
         <div className="p-4">
           <h2 className="text-center text-xl font-semibold text-red-600">
-            This web app is still in development and running on a localhost.
+            {content.title}
           </h2>
-          <p className="mt-4 text-center">
-            The website you’re trying to view is currently under development and
-            can only be accessed locally.
-          </p>
+          <p className="mt-4 text-center">{content.description}</p>
           <div className="mt-6 flex justify-center">
             <button
-              onClick={() => setIsModalOpen(false)}
-              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:opacity-50"
+              onClick={() => setLinkNote(null)}
+              className="rounded-full bg-primary px-7 py-3 font-futura font-semibold uppercase text-white hover:opacity-50"
             >
               Close
             </button>

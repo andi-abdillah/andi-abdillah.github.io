@@ -1,35 +1,45 @@
 [
   {
+    "name": "Puspetindo ERP System",
+    "description": "A full-stack ERP system for Puspetindo covering sales, procurement, inventory, finance modules, and more. Built with Laravel, React, TypeScript, and Inertia.js.",
+    "image": "puspetindo.png",
+    "year": "2025",
+    "link": "",
+    "linkNote": "private"
+  },
+  {
     "name": "CSIRT Ticketing System",
-    "description": "A streamlined ticketing system developed for BangkalanKab-CSIRT to enhance issue reporting and resolution, ensuring efficient and secure communication between users and the support team.",
+    "description": "A streamlined ticketing system developed for BangkalanKab-CSIRT to enhance issue reporting and resolution. Built with Laravel, React, Inertia.js, and MySQL.",
     "image": "tiket-bangkalankab.png",
     "year": "2024",
     "link": "https://tiket.bangkalankab.go.id/"
   },
   {
     "name": "CSIRT Web Profile",
-    "description": "An official web profile for BangkalanKab-CSIRT, showcasing its mission, services, and achievements in cybersecurity.",
+    "description": "An official web profile for BangkalanKab-CSIRT showcasing its mission, services, and achievements in cybersecurity. Built with Laravel and MySQL.",
     "image": "csirt-bangkalankab.png",
     "year": "2024",
     "link": "https://csirt.bangkalankab.go.id"
   },
   {
     "name": "Pen & Paper",
-    "description": "A web-based social media platform that allows users to connect, share, and engage in conversations through written content. Pen & Paper aims to provide a simple and intuitive platform for creative expression, connecting individuals through storytelling and discussions.",
+    "description": "A web-based social media platform for sharing and engaging through written content, connecting people through creative expression. Built with React, Hapi.js, MySQL, and Sequelize.",
     "image": "pen-paper.png",
     "year": "2023",
-    "link": ""
+    "link": "",
+    "linkNote": "localhost"
   },
   {
     "name": "Point of Sale (POS) System",
-    "description": "A Point of Sale (POS) system designed for selling food at a restaurant named Omah Jawa. The platform enables efficient order management, sales tracking, and customer service for the restaurant, enhancing the overall dining experience.",
+    "description": "A Point of Sale system designed for Omah Jawa restaurant to handle order management, sales tracking, and customer service efficiently. Built with Laravel and MySQL.",
     "image": "omah-jawa.png",
     "year": "2023",
-    "link": ""
+    "link": "",
+    "linkNote": "localhost"
   },
   {
     "name": "Snake Game",
-    "description": "Snake game is a game concept where the player controls a snake that grows in length, with the snake's body itself being the main obstacle.",
+    "description": "A classic Snake game where the player controls a growing snake and avoids colliding with its own body. Built with vanilla JavaScript and HTML Canvas.",
     "image": "snake-game.png",
     "year": "2022",
     "link": "https://andi-abdillah.github.io/snake-game/"
