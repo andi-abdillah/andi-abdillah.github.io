@@ -6,7 +6,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        open: ["Open Sans", ...defaultTheme.fontFamily.sans],
+        inter: ["Inter", ...defaultTheme.fontFamily.sans],
+        futura: ["FuturaNowHeadline", ...defaultTheme.fontFamily.sans],
       },
       colors: {
         primary: "#741ce8",
