@@ -42,6 +42,6 @@
     "description": "A classic Snake game where the player controls a growing snake and avoids colliding with its own body. Built with vanilla JavaScript and HTML Canvas.",
     "image": "snake-game.png",
     "year": "2022",
-    "link": "https://andi-abdillah.github.io/snake-game/"
+    "link": "https://amin-abdillah-snake-game.vercel.app/"
   }
 ]
