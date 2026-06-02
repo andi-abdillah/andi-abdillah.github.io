@@ -19,7 +19,7 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <section className="bg-primary px-8 pb-2 pt-10">
+    <section className="bg-[#0d0d0d] px-8 pb-2 pt-6">
       <div className="flex w-full justify-center gap-6 text-gray-600">
         {socialLinks.map((link, index) => (
           <a key={index} href={link.href} target="_blank" rel="noreferrer">
