@@ -1,191 +1,236 @@
-import { useState } from "react";
-import { useFormik } from "formik";
-import * as yup from "yup";
-import InputError from "../components/InputError";
-import TextInput from "../components/TextInput";
-import InputLabel from "../components/InputLabel";
-import TextArea from "../components/TextArea";
+import { useEffect, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
-import Modal from "../components/Modal";
-import { TbLoader2 } from "react-icons/tb";
+import { FaLinkedinIn, FaGithub } from "react-icons/fa";
+import { HiOutlineMail } from "react-icons/hi";
+import { IoSend } from "react-icons/io5";
+
+const GREETING = "Hai! Mau tahu apa tentang aku?";
+
+const SUGGESTIONS = [
+  {
+    q: "Biasanya ngerjain proyek apa aja?",
+    a: "Paling sering web app full-stack — company profile, sistem tiket, sampai ERP perusahaan. Andalannya Laravel sama React.",
+  },
+  {
+    q: "Apa sih yang bikin kamu beda?",
+    a: "Aku nggak cuma ngejar 'yang penting jalan'. Kodenya aku rapiin, tampilannya aku bikin enak dipakai. Soalnya yang make kan bukan aku doang.",
+  },
+  {
+    q: "Berapa lama ngerjain satu proyek?",
+    a: "Tergantung skalanya. Yang simpel bisa seminggu, kalau udah ada database, login, dan banyak fitur ya sebulanan.",
+  },
+  {
+    q: "Gimana cara mulai kerja bareng?",
+    a: "Tinggal colek aku lewat email atau LinkedIn di bawah, atau ketik aja di sini. Ceritain mau bikin apa, kita ngobrol santai dulu.",
+  },
+  {
+    q: "🐛 Mau main game dulu?",
+    a: "Haha boleh! Ada mini game di bawah — coba tangkep bug sebanyak mungkin dalam 30 detik. Scroll aja ke bawah ya 👇",
+    scroll: true,
+  },
+];
+
+const socialLinks = [
+  { href: "https://www.linkedin.com/in/amin-abdillah-099225208/", icon: <FaLinkedinIn />, label: "LinkedIn" },
+  { href: "mailto:aminabdillah.id@gmail.com?subject=Mail from our Website", icon: <HiOutlineMail />, label: "Email" },
+  { href: "https://github.com/andi-abdillah", icon: <FaGithub />, label: "GitHub" },
+];
+
+const Avatar = () => (
+  <div
+    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-futura text-xs font-bold text-white"
+    style={{ background: "rgba(255,255,255,0.15)" }}
+  >
+    AA
+  </div>
+);
+
+const TypingDots = () => (
+  <div className="flex items-center gap-1 px-1 py-1">
+    {[0, 1, 2].map((i) => (
+      <span
+        key={i}
+        className="h-1.5 w-1.5 rounded-full bg-white/60"
+        style={{ animation: "chatbounce 1s infinite", animationDelay: `${i * 0.15}s` }}
+      />
+    ))}
+  </div>
+);
 
 const Contact = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalType, setModalType] = useState("success");
-  const [isSending, setIsSending] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: "bot", text: GREETING },
+    { role: "bot", text: "Oh iya, kalau mau aku bisa bales, sertakan email atau nomor WA kamu di pesan ya." },
+  ]);
+  const [suggestions, setSuggestions] = useState(SUGGESTIONS);
+  const [input, setInput] = useState("");
+  const [typing, setTyping] = useState(false);
+  const scrollRef = useRef(null);
 
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      message: "",
-    },
-    validationSchema: yup.object().shape({
-      name: yup
-        .string()
-        .required("Name is required")
-        .min(3, "Name must be at least 3 characters")
-        .max(50, "Name cannot exceed 50 characters"),
-      email: yup
-        .string()
-        .required("Email is required")
-        .email("Email must be a valid email"),
-      message: yup
-        .string()
-        .required("Message is required")
-        .min(10, "Message must be at least 10 characters")
-        .max(500, "Message cannot exceed 500 characters"),
-    }),
-    onSubmit: (values, { resetForm }) => {
-      setIsSending(true);
-      const templateParams = {
-        from_name: values.name,
-        from_email: values.email,
-        to_name: "Amin Abdillah",
-        message: values.message,
-      };
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, typing]);
 
-      emailjs
-        .send("my_portfolio", "template_gqerwxr", templateParams, {
-          publicKey: "IbAI6dqRBxQejN0HU",
-        })
-        .then(() => {
-          setModalType("success");
-          setModalMessage("Your message has been sent successfully!");
-          resetForm();
-        })
-        .catch(() => {
-          setModalType("error");
-          setModalMessage(
-            "Failed to send the message. Please try again later.",
-          );
-        })
-        .finally(() => {
-          setIsSending(false);
-          setIsModalOpen(true);
-        });
-    },
-  });
+  const replyAfterDelay = (text) => {
+    setTyping(true);
+    setTimeout(() => {
+      setTyping(false);
+      setMessages((m) => [...m, { role: "bot", text }]);
+    }, 800);
+  };
 
-  const hasErrors = Object.keys(formik.errors).length > 0;
+  const handleAsk = ({ q, a, scroll }) => {
+    setMessages((m) => [...m, { role: "user", text: q }]);
+    setSuggestions((s) => s.filter((item) => item.q !== q));
+    replyAfterDelay(a);
+    if (scroll) {
+      setTimeout(() => {
+        document.getElementById("catch-the-bug")?.scrollIntoView({ behavior: "smooth" });
+      }, 1200);
+    }
+  };
 
-  const hasFilledValues = Object.values(formik.values).some(
-    (value) => value !== "" && value !== null && value !== undefined,
-  );
+  const [sending, setSending] = useState(false);
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text || sending) return;
+    setMessages((m) => [...m, { role: "user", text }]);
+    setInput("");
+    setSending(true);
+    setTyping(true);
+
+    emailjs
+      .send(
+        "my_portfolio",
+        "template_gqerwxr",
+        {
+          from_name: "Website Chat",
+          from_email: "(tidak dicantumkan)",
+          to_name: "Amin Abdillah",
+          message: text,
+          reply_to: "",
+        },
+        { publicKey: "IbAI6dqRBxQejN0HU" },
+      )
+      .then(() => {
+        setTyping(false);
+        setSending(false);
+        setMessages((m) => [...m, { role: "bot", text: "Pesan kamu udah masuk ke email aku! Aku usahain bales secepatnya. Kalau belum sempat cantumin kontak kamu di pesan tadi, DM aku aja lewat ikon di bawah ya." }]);
+      })
+      .catch(() => {
+        setTyping(false);
+        setSending(false);
+        setMessages((m) => [...m, { role: "bot", text: "Aduh, gagal ngirim nih. Coba lagi atau langsung colek aku lewat ikon email/LinkedIn di bawah ya." }]);
+      });
+  };
 
   return (
-    <section id="contact" className="px-8 py-24">
-      <h1 className="mb-16 text-center text-4xl font-bold font-semibold">
-        Get in touch
-      </h1>
-      <div className="mx-auto max-w-lg space-y-4 lg:max-w-2xl">
-        <form onSubmit={formik.handleSubmit} className="mt-8 space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <InputLabel htmlFor="name" value="Name" />
-              <TextInput
-                id="name"
-                name="name"
-                type="text"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                hasError={formik.touched.name && Boolean(formik.errors.name)}
-                autoComplete="name"
-              />
-              {formik.touched.name && (
-                <InputError className="mt-2" message={formik.errors.name} />
-              )}
-            </div>
+    <section id="contact" className="bg-primary px-8 py-14">
+      <style>{`
+        @keyframes chatbounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+        .chat-scroll{scrollbar-width:none;-ms-overflow-style:none}.chat-scroll::-webkit-scrollbar{display:none}
+        @keyframes msgInLeft{from{opacity:0;transform:translateX(-16px) scale(0.92)}to{opacity:1;transform:translateX(0) scale(1)}}
+        @keyframes msgInRight{from{opacity:0;transform:translateX(16px) scale(0.92)}to{opacity:1;transform:translateX(0) scale(1)}}
+        .msg-bot{animation:msgInLeft 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        .msg-user{animation:msgInRight 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards}
+      `}</style>
 
-            <div>
-              <InputLabel htmlFor="email" value="Email" />
-              <TextInput
-                id="email"
-                name="email"
-                type="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                hasError={formik.touched.email && Boolean(formik.errors.email)}
-                autoComplete="email"
-              />
-              {formik.touched.email && (
-                <InputError className="mt-2" message={formik.errors.email} />
-              )}
-            </div>
-          </div>
-          <div>
-            <InputLabel htmlFor="message" value="Message" />
-            <TextArea
-              id="message"
-              name="message"
-              value={formik.values.message}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              hasError={
-                formik.touched.message && Boolean(formik.errors.message)
-              }
-            />
-            {formik.touched.message && (
-              <InputError className="mt-2" message={formik.errors.message} />
-            )}
-          </div>
-
-          <div className="flex justify-center gap-3">
-            <button
-              type="submit"
-              disabled={hasErrors || isSending}
-              className={`flex gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white transition hover:bg-primary/80 ${
-                (hasErrors || isSending) && "cursor-not-allowed opacity-50"
-              }`}
-            >
-              {isSending ? (
-                <>
-                  {"Sending"}
-                  <TbLoader2 className="animate-spin text-2xl" />
-                </>
-              ) : (
-                "Send"
-              )}
-            </button>
-
-            {!isSending && hasFilledValues && (
-              <button
-                type="button"
-                className="rounded-full bg-red-500 px-7 py-3 font-semibold text-white hover:opacity-50"
-                onClick={() => formik.resetForm()}
-              >
-                Cancel
-              </button>
-            )}
-          </div>
-        </form>
-      </div>
-
-      <Modal
-        show={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        maxWidth="md"
-      >
-        <div className="p-4">
-          <h2
-            className={`text-center text-xl font-semibold ${modalType === "success" ? "text-green-600" : "text-red-600"}`}
-          >
-            {modalType === "success" ? "Success" : "Error"}
-          </h2>
-          <p className="mt-4 text-center">{modalMessage}</p>
-          <div className="mt-6 flex justify-center">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="rounded-full bg-primary px-7 py-3 font-semibold text-white hover:opacity-50"
-            >
-              Close
-            </button>
-          </div>
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+        {/* Left */}
+        <div className="lg:col-span-1">
+          <h1 className="font-futura text-5xl font-extrabold uppercase leading-tight text-white">
+            Get in touch
+          </h1>
+          <p className="mt-4 max-w-xs text-white/60">
+            Have a project in mind or want to discuss an opportunity? Feel free to reach out.
+          </p>
         </div>
-      </Modal>
+
+        {/* Chat panel */}
+        <div className="flex h-[60vh] flex-col overflow-hidden rounded-3xl bg-[#161616] p-4 lg:col-span-2 lg:h-[520px]">
+          {/* Messages */}
+          <div ref={scrollRef} className="chat-scroll flex-1 space-y-4 overflow-y-auto px-1 py-2">
+            {messages.map((msg, i) =>
+              msg.role === "bot" ? (
+                <div key={i} className="msg-bot flex items-start gap-2.5">
+                  <Avatar />
+                  <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-[#2a2a2a] px-4 py-2.5 text-left text-sm leading-relaxed text-white">
+                    {msg.text}
+                  </div>
+                </div>
+              ) : (
+                <div key={i} className="msg-user flex justify-end">
+                  <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-primary px-4 py-2.5 text-left text-sm leading-relaxed text-white" style={{ background: "#5a14b4" }}>
+                    {msg.text}
+                  </div>
+                </div>
+              ),
+            )}
+
+            {typing && (
+              <div className="flex items-start gap-2.5">
+                <Avatar />
+                <div className="rounded-2xl rounded-tl-sm bg-[#2a2a2a] px-3 py-2">
+                  <TypingDots />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Suggestions */}
+          {suggestions.length > 0 && (
+            <div className="flex flex-wrap gap-2 px-1 py-3">
+              {suggestions.map((item) => (
+                <button
+                  key={item.q}
+                  onClick={() => handleAsk(item)}
+                  className="rounded-full border border-white/15 px-4 py-2 text-xs text-white/70 transition-colors hover:border-white/40 hover:text-white"
+                >
+                  {item.q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Input + social — satu baris di desktop, icons di bawah di mobile */}
+          <form onSubmit={handleSend} className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-center">
+            {/* Input + send */}
+            <div className="flex flex-1 items-center gap-2">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Message..."
+                className="flex-1 rounded-full bg-[#2a2a2a] px-5 py-2.5 text-sm text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-primary"
+              />
+              <button
+                type="submit"
+                aria-label="Send"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-opacity hover:opacity-80"
+              >
+                <IoSend className="text-lg" />
+              </button>
+            </div>
+            {/* Social icons — kiri desktop, bawah mobile */}
+            <div className="flex items-center justify-center gap-1.5 sm:order-first">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={link.label}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </div>
+          </form>
+        </div>
+      </div>
     </section>
   );
 };
