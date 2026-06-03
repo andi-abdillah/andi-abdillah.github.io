@@ -64,9 +64,9 @@ const Home = () => {
   return (
     <section
       id="home"
-      className="relative flex h-auto min-h-screen flex-col items-center overflow-hidden bg-primary px-8 pb-16 pt-16 text-center sm:min-h-0 sm:pt-10 md:pt-8 lg:min-h-screen"
+      className="relative flex flex-col items-center overflow-hidden bg-primary px-8 pb-16 pt-16 text-center sm:pt-10 md:pt-8"
     >
-      {/* TOP + Name — rapat */}
+{/* TOP + Name — rapat */}
       <div
         className="relative z-10 flex flex-col items-center gap-6 md:gap-3"
         style={{ opacity: mounted ? 1 : 0, transition: "opacity 1.2s ease 0.25s" }}
@@ -83,7 +83,7 @@ const Home = () => {
         {/* Name */}
         <h1
           className="font-futura font-extrabold uppercase text-white"
-          style={{ fontSize: "max(3.8rem, 7vw)", letterSpacing: "-0.02em", lineHeight: 0.82 }}
+          style={{ fontSize: "clamp(2.8rem, 10vw, 96px)", letterSpacing: "-0.02em", lineHeight: 0.82 }}
         >
           {["Amin", "Abdillah"].map((word, i) => (
             <span key={i} className="inline-block">
@@ -168,12 +168,12 @@ const Home = () => {
 
       {/* BOT */}
       <div
-        className="mt-14 flex flex-col items-center gap-1 lg:mt-auto"
+        className="mt-12 flex flex-col items-center gap-1 lg:mt-6"
         style={{ opacity: mounted ? 1 : 0, transition: "opacity 1.2s ease 0.25s" }}
       >
         <p
           className="font-futura font-extrabold uppercase"
-          style={{ color: "rgba(255,255,255,0.25)", fontSize: "max(3rem, 10vw)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
+          style={{ color: "rgba(255,255,255,0.25)", fontSize: "clamp(2rem, 12vw, 130px)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
         >
           Web Developer
         </p>

@@ -128,7 +128,7 @@ const Contact = () => {
 
   return (
     <section id="contact" className="bg-primary px-8 py-14">
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 lg:grid-cols-3">
         {/* Left */}
         <div className="lg:col-span-1">
           <h1 className="font-futura text-5xl font-extrabold uppercase leading-tight text-white">
