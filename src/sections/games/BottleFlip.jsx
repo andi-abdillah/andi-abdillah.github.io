@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-const GRAVITY   = 0.48;
-const TRAY_W    = 84;
-const TRAY_AMP  = 85;
-const TRAY_SPD  = 0.022;
+const GRAVITY      = 0.48;
+const TRAY_W       = 60;
+const TRAY_CENTER  = 90;
+const TRAY_AMP     = 75;
+const TRAY_SPD     = 0.025;
 
 const BOTTLES = [
   { id:"classic", label:"Half Full", fill:"60%", body:"rgba(125,211,252,0.25)", liquid:"linear-gradient(180deg,#38bdf8,#0ea5e9)", cap:"#1e3a8a", stability:1.08, spin:1.0  },
@@ -20,7 +21,7 @@ const BOTTLES = [
 const MODES = [
   { id:"default",      label:"Classic",     startX:0,    tableX:0,   tableW:160, ideal:50, window:25, tolerance:52, bonus:1 },
   { id:"table_throw",  label:"Table Throw", startX:-130, tableX:90,  tableW:110, ideal:45, window:18, tolerance:60, bonus:2 },
-  { id:"sliding_tray", label:"Sliding Tray",startX:0,    tableX:0,   tableW:TRAY_W, ideal:50, window:25, tolerance:62, bonus:3 },
+  { id:"sliding_tray", label:"Sliding Tray",startX:-130, tableX:90,  tableW:120,   ideal:45, window:18, tolerance:52, bonus:3 },
 ];
 
 const Bottle = ({ config, x, y, rot }) => (
@@ -73,11 +74,11 @@ const BottleFlipGame = ({ onBack }) => {
   // Sliding tray: animate via direct DOM to avoid per-frame re-renders
   useEffect(() => {
     cancelAnimationFrame(trayRafRef.current);
-    trayXRef.current = 0;
+    trayXRef.current = TRAY_CENTER;
     if (modeIdx !== 2) return;
     const animate = () => {
       trayTickRef.current++;
-      const x = Math.sin(trayTickRef.current * TRAY_SPD) * TRAY_AMP;
+      const x = TRAY_CENTER + Math.sin(trayTickRef.current * TRAY_SPD) * TRAY_AMP;
       trayXRef.current = x;
       if (trayElRef.current) {
         trayElRef.current.style.left = `calc(50% + ${x}px)`;
@@ -140,12 +141,12 @@ const BottleFlipGame = ({ onBack }) => {
 
     x = m.startX; rot = 0;
 
-    if (m.id === "table_throw") {
+    if (m.id === "table_throw" || m.id === "sliding_tray") {
       vx        = 3 + (p / 100) * 8;
       vy        = 4 + (p / 100) * 9;
       spinSpeed = (6 + p / 11) * bc.spin;
     } else {
-      const wind = (m.id === "default" && windOn) ? ((Math.random() > 0.5 ? 1 : -1) * 0.18 * (0.5 + p / 100)) : 0;
+      const wind = windOn ? ((Math.random() > 0.5 ? 1 : -1) * 0.18 * (0.5 + p / 100)) : 0;
       vx        = wind;
       vy        = 5 + (p / 100) * 12;
       spinSpeed = (7.2 + p / 9) * bc.spin;
@@ -164,9 +165,7 @@ const BottleFlipGame = ({ onBack }) => {
         const base = Math.round(rot / 360) * 360;
         const dist = Math.min(mod, 360 - mod);
         const powerMiss = Math.abs(p - m.ideal);
-        const tol = m.id === "default"
-          ? Math.max(20, m.tolerance * bc.stability - powerMiss * 0.4)
-          : Math.max(20, m.tolerance * bc.stability);
+        const tol   = Math.max(20, m.tolerance * bc.stability - powerMiss * 0.4);
         const rotOK = dist <= tol;
 
         let posOK = true;
@@ -176,7 +175,7 @@ const BottleFlipGame = ({ onBack }) => {
           posOK = Math.abs(x - m.tableX) < m.tableW / 2;
           if (!posOK) failText = x < m.tableX ? "Too short" : "Overshot";
         } else if (m.id === "sliding_tray") {
-          posOK = Math.abs(trayXRef.current) < TRAY_W / 2 - 5;
+          posOK = Math.abs(x - trayXRef.current) < TRAY_W / 2 - 5;
           if (!posOK) failText = "Missed the tray";
         }
 
@@ -220,13 +219,13 @@ const BottleFlipGame = ({ onBack }) => {
 
   const HINTS = {
     default:      "Hold to charge, release to flip",
-    table_throw:  "Hold and release to throw right",
-    sliding_tray: "Flip when the tray lines up",
+    table_throw:  "Hold and release to throw to the right table",
+    sliding_tray: "Throw right, time the tray to be underneath",
   };
   const TIPS = {
     default:      `Sweet spot: ${mode.ideal - mode.window}–${mode.ideal + mode.window}% power.`,
     table_throw:  "Power controls distance and rotation. Aim for the right table.",
-    sliding_tray: "Watch the tray, flip when it's near center.",
+    sliding_tray: "Same throw as Table Throw — but the tray moves. Time it right.",
   };
 
   return (
@@ -328,14 +327,17 @@ const BottleFlipGame = ({ onBack }) => {
         )}
         {mode.id === "sliding_tray" && (
           <>
-            {/* center target marker */}
-            <div className="pointer-events-none absolute bottom-7 left-1/2 h-1.5 -translate-x-1/2 rounded-full"
-              style={{ width: 200, background: "rgba(255,255,255,0.06)" }} />
-            {/* moving tray — DOM-animated via ref */}
+            {/* left stand */}
+            <div className="pointer-events-none absolute bottom-7 rounded-full"
+              style={{ left: `calc(50% + ${mode.startX}px)`, transform: "translateX(-50%)", width: 52, height: 7, background: "#5a3a1a", boxShadow: "0 8px 18px rgba(0,0,0,0.4)" }} />
+            {/* right base surface */}
+            <div className="pointer-events-none absolute bottom-7 rounded-full"
+              style={{ left: `calc(50% + ${mode.tableX}px)`, transform: "translateX(-50%)", width: mode.tableW, height: 10, background: "#5a3a1a", boxShadow: "0 12px 28px rgba(0,0,0,0.5)" }} />
+            {/* moving tray on top — DOM-animated via ref */}
             <div
               ref={trayElRef}
-              className="pointer-events-none absolute bottom-7 rounded-md"
-              style={{ left: "50%", transform: "translateX(-50%)", width: TRAY_W, height: 9, background: "#b8953a", boxShadow: "0 8px 22px rgba(0,0,0,0.5)" }}
+              className="pointer-events-none absolute rounded-md"
+              style={{ bottom: "36px", left: "50%", transform: "translateX(-50%)", width: TRAY_W, height: 7, background: "#b8953a", boxShadow: "0 4px 16px rgba(0,0,0,0.5)" }}
             />
           </>
         )}
@@ -383,7 +385,7 @@ const BottleFlipGame = ({ onBack }) => {
         {/* info box */}
         <div className="pointer-events-none absolute bottom-4 right-4 rounded-2xl border border-white/8 bg-black/30 px-4 py-3 text-right backdrop-blur-sm">
           <p className="text-[10px] uppercase text-white/35">{mode.label}</p>
-          {mode.id !== "table_throw" && (
+          {mode.id === "default" && (
             <>
               <p className="font-futura text-base font-bold text-white">{mode.ideal - mode.window}–{mode.ideal + mode.window}%</p>
               <p className="text-[9px] uppercase text-white/30">target power</p>
@@ -391,6 +393,9 @@ const BottleFlipGame = ({ onBack }) => {
           )}
           {mode.id === "table_throw" && (
             <p className="font-futura text-xs font-bold text-white/60">Aim for the table</p>
+          )}
+          {mode.id === "sliding_tray" && (
+            <p className="font-futura text-xs font-bold text-white/60">Hit the moving tray</p>
           )}
         </div>
       </div>
