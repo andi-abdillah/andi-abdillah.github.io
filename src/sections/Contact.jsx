@@ -9,15 +9,15 @@ const GREETING = "Hey! What would you like to know about me?";
 const SUGGESTIONS = [
   {
     q: "What kind of projects do you work on?",
-    a: "Mostly full-stack web apps: company profiles, ticketing systems, and ERPs. My go-to stack is Laravel and React.",
+    a: "Mostly web apps. Company profiles, ticketing systems, ERPs, that kind of thing. I reach for Laravel and React on most projects.",
   },
   {
     q: "What makes you different?",
-    a: "I don't just make things work. I make them clean and enjoyable to use, because the end user isn't me.",
+    a: "I sweat the details. Most devs stop when it works. I stop when it feels right.",
   },
   {
     q: "How long does a project take?",
-    a: "Depends on the scope. Simple ones can be done in a week. If it involves databases, auth, and multiple features, expect around a month.",
+    a: "Depends on the scope. Simple ones can be done in a week. If it involves databases, auth, and multiple features, expect a month or more.",
   },
   {
     q: "How do we start working together?",
