@@ -83,7 +83,7 @@ const Home = () => {
         {/* Name */}
         <h1
           className="font-futura font-extrabold uppercase text-white"
-          style={{ fontSize: "clamp(2.8rem, 10vw, 96px)", letterSpacing: "-0.02em", lineHeight: 0.82 }}
+          style={{ fontSize: "clamp(3.4rem, 10vw, 96px)", letterSpacing: "-0.02em", lineHeight: 0.82 }}
         >
           {["Amin", "Abdillah"].map((word, i) => (
             <span key={i} className="inline-block">
