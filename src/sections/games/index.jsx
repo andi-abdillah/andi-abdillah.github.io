@@ -3,10 +3,7 @@ import CatchTheBugGame from "./CatchTheBug";
 import MemoryCardGame  from "./MemoryCard";
 import CodeBreakerGame from "./CodeBreaker";
 import BottleFlipGame  from "./BottleFlip";
-import KiteBattleGame  from "./KiteBattle";
-
 const GAME_LIST = [
-  { id:"kite",   emoji:"🪁", title:"Kite Battle",    desc:"Steer your kite, cross strings, pull to cut. Defeat all 3 rivals!" },
   { id:"bottle", emoji:"🍾", title:"Bottle Flip Plus", desc:"Pick a bottle, choose a target, then land through wind and tilt." },
   { id:"bug",    emoji:"🐛", title:"Catch the Bug",   desc:"Tap bugs before they escape. 30 sec, how many can you catch?" },
   { id:"memory", emoji:"🃏", title:"Memory Card",     desc:"Flip and match all emoji pairs as fast as you can." },
@@ -43,7 +40,6 @@ const Games = () => {
         {activeGame==="memory" && <MemoryCardGame  onBack={()=>setActiveGame(null)} />}
         {activeGame==="code"   && <CodeBreakerGame onBack={()=>setActiveGame(null)} />}
         {activeGame==="bottle" && <BottleFlipGame  onBack={()=>setActiveGame(null)} />}
-        {activeGame==="kite"   && <KiteBattleGame  onBack={()=>setActiveGame(null)} />}
       </div>
     </section>
   );
