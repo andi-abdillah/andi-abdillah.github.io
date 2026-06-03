@@ -267,7 +267,7 @@ const BottleFlipGame = ({ onBack }) => {
           ))}
         </div>
         {/* Bottle + wind + reset */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {BOTTLES.map((b, i) => (
             <button
               key={b.id}
