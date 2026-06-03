@@ -61,7 +61,7 @@ Prettier is configured with `prettier-plugin-tailwindcss` ([.prettierrc](.pretti
 
 ### Contact Form
 
-[src/sections/Contact.jsx](src/sections/Contact.jsx) uses Formik + Yup for validation and EmailJS (`@emailjs/browser`) to send emails without a backend. The EmailJS service ID, template ID, and public key are hardcoded in that file.
+[src/sections/Contact.jsx](src/sections/Contact.jsx) uses EmailJS (`@emailjs/browser`) to send emails without a backend. Credentials are stored in `.env.local` and accessed via `import.meta.env.VITE_EMAILJS_*`.
 
 ### Shared Components
 
@@ -72,3 +72,22 @@ Prettier is configured with `prettier-plugin-tailwindcss` ([.prettierrc](.pretti
 ### Deployment
 
 Deploys to GitHub Pages under `https://andi-abdillah.github.io/` via the `gh-pages` package. The `homepage` field in [package.json](package.json) must match the deployed URL.
+
+## Writing Standards
+
+All user-visible text in this project (UI copy, descriptions, chat messages, game content, labels) must follow these rules. These apply to every string that appears on screen — not code comments or variable names.
+
+**Forbidden characters and patterns:**
+- `—` (em dash) — use a comma, period, or rewrite the sentence instead
+- `–` (en dash) — same rule
+- `…` (ellipsis character) — use `...` if needed, or rewrite to avoid trailing off
+- `"` `"` `'` `'` (curly/smart quotes) — use straight quotes `"` and `'` only
+- Excessive `!` — one exclamation mark maximum per sentence, and only when genuinely needed
+- Filler openers like "Certainly!", "Absolutely!", "Great question!", "Of course!" — never use these in UI copy
+- Hedging phrases like "This might be...", "Perhaps consider...", "It's worth noting that..." — cut them
+- Redundant affirmations like "Feel free to..." — just say what the thing does
+
+**Tone:**
+- Direct and clear. Say what you mean without softening filler.
+- No AI-typical overly polished phrasing. Write like a person, not a press release.
+- Short sentences preferred over long ones joined by em dashes or semicolons.

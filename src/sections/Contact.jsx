@@ -13,7 +13,7 @@ const SUGGESTIONS = [
   },
   {
     q: "What makes you different?",
-    a: "I don't just make things work — I make them clean and enjoyable to use. Because the end user isn't me.",
+    a: "I don't just make things work. I make them clean and enjoyable to use, because the end user isn't me.",
   },
   {
     q: "How long does a project take?",
