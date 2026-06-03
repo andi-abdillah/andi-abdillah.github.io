@@ -3,12 +3,14 @@ import CatchTheBugGame from "./CatchTheBug";
 import MemoryCardGame  from "./MemoryCard";
 import CodeBreakerGame from "./CodeBreaker";
 import BottleFlipGame  from "./BottleFlip";
+import KiteBattleGame  from "./KiteBattle";
 
 const GAME_LIST = [
-  { id:"bottle", emoji:"🍾", title:"Bottle Flip",   desc:"Hold to charge, release to flip — land it standing up!" },
-  { id:"bug",    emoji:"🐛", title:"Catch the Bug", desc:"Tap bugs before they escape — 30 sec, how many can you catch?" },
-  { id:"memory", emoji:"🃏", title:"Memory Card",   desc:"Flip and match all emoji pairs as fast as you can." },
-  { id:"code",   emoji:"🔍", title:"Code Breaker",  desc:"Guess the programming language from a code snippet." },
+  { id:"kite",   emoji:"🪁", title:"Kite Battle",    desc:"Steer your kite, cross strings, pull to cut. Defeat all 3 rivals!" },
+  { id:"bottle", emoji:"🍾", title:"Bottle Flip Plus", desc:"Pick a bottle, choose a target, then land through wind and tilt." },
+  { id:"bug",    emoji:"🐛", title:"Catch the Bug",   desc:"Tap bugs before they escape. 30 sec, how many can you catch?" },
+  { id:"memory", emoji:"🃏", title:"Memory Card",     desc:"Flip and match all emoji pairs as fast as you can." },
+  { id:"code",   emoji:"🔍", title:"Code Breaker",    desc:"Guess the programming language from a code snippet." },
 ];
 
 const Games = () => {
@@ -17,10 +19,10 @@ const Games = () => {
   return (
     <section id="catch-the-bug" className="bg-[#0d0d0d] px-8 py-24">
       <h1 className="mb-2 text-center font-futura text-5xl font-extrabold uppercase text-white">Mini Games</h1>
-      <p className="mb-12 text-center text-sm text-white/40">Take a break — pick a game</p>
+      <p className="mb-12 text-center text-sm text-white/40">Take a break, pick a game</p>
 
       {!activeGame && (
-        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {GAME_LIST.map(g=>(
             <button key={g.id} onClick={()=>setActiveGame(g.id)}
               className="group flex flex-col items-center gap-4 rounded-3xl p-8 text-center transition-all duration-300 hover:-translate-y-2"
@@ -41,6 +43,7 @@ const Games = () => {
         {activeGame==="memory" && <MemoryCardGame  onBack={()=>setActiveGame(null)} />}
         {activeGame==="code"   && <CodeBreakerGame onBack={()=>setActiveGame(null)} />}
         {activeGame==="bottle" && <BottleFlipGame  onBack={()=>setActiveGame(null)} />}
+        {activeGame==="kite"   && <KiteBattleGame  onBack={()=>setActiveGame(null)} />}
       </div>
     </section>
   );
