@@ -81,9 +81,9 @@ const Portfolio = () => {
         A Lovely Selection of Work
       </h1>
       <div className="flex flex-col space-y-24">
-        {Data.map((item, index) => (
+        {Data.map((item) => (
           <ProjectItem
-            key={index}
+            key={item.name}
             item={item}
             onNoLink={() => setLinkNote(item.linkNote ?? "localhost")}
           />

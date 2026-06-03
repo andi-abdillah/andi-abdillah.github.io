@@ -62,9 +62,8 @@ const MiniTabCard = ({ emoji, label, isSpam }) => (
   </div>
 );
 
-let idCounter = 0;
-
 const TabCleanerGame = ({ onBack }) => {
+  const idCounter = useRef(0);
   const [gameState, setGameState]   = useState("idle");
   const [tabs, setTabs]             = useState([]);
   const [score, setScore]           = useState(0);
@@ -86,7 +85,7 @@ const TabCleanerGame = ({ onBack }) => {
   const spawnTab = useCallback(() => {
     if (!areaRef.current || !gameActiveRef.current) return;
     const { width, height } = areaRef.current.getBoundingClientRect();
-    const id    = ++idCounter;
+    const id    = ++idCounter.current;
     const isBad = Math.random() < badChance(timeLeftRef.current);
     const pool  = isBad ? BAD_TABS : GOOD_TABS;
     const tmpl  = pool[Math.floor(Math.random() * pool.length)];
@@ -213,7 +212,7 @@ const TabCleanerGame = ({ onBack }) => {
         onClick={onBack}
         className="mb-6 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
       >
-        ← Back to Games
+        <span className="leading-none">←</span><span>Back to Games</span>
       </button>
 
       {/* Stats */}
@@ -289,7 +288,7 @@ const TabCleanerGame = ({ onBack }) => {
         <div
           ref={areaRef}
           className="relative overflow-hidden"
-          style={{ height: 370, background: "linear-gradient(160deg,#0f0f1a,#0a0a12)" }}
+          style={{ height: "clamp(280px, 55vh, 370px)", background: "linear-gradient(160deg,#0f0f1a,#0a0a12)" }}
         >
           {/* Grid overlay */}
           <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.025]">
@@ -443,17 +442,6 @@ const TabCleanerGame = ({ onBack }) => {
         </div>
       </div>
 
-      <style>{`
-        @keyframes tabIn     { from { opacity:0; transform:scale(0.75) translateY(-8px) } to { opacity:1; transform:scale(1) translateY(0) } }
-        @keyframes drainBar  { from { width:100% } to { width:0% } }
-        @keyframes arenaFlash { 0% { opacity:1 } 100% { opacity:0 } }
-        @keyframes oopsPopup {
-          0%   { opacity:0; transform:scale(0.8) }
-          12%  { opacity:1; transform:scale(1.05) }
-          70%  { opacity:1; transform:scale(1) }
-          100% { opacity:0; transform:scale(0.95) }
-        }
-      `}</style>
     </div>
   );
 };

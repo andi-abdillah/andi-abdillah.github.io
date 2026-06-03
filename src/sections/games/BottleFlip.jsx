@@ -243,7 +243,7 @@ const BottleFlipGame = ({ onBack }) => {
         onClick={(e) => { e.stopPropagation(); onBack(); }}
         className="mb-4 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
       >
-        ← Back to Games
+        <span className="leading-none">←</span><span>Back to Games</span>
       </button>
 
       {/* Stats */}
@@ -296,7 +296,7 @@ const BottleFlipGame = ({ onBack }) => {
         className="relative mx-auto select-none overflow-hidden rounded-3xl"
         style={{
           maxWidth: 700,
-          height: 370,
+          height: "clamp(280px, 55vh, 370px)",
           background: "linear-gradient(180deg,#111827 0%,#1e3a5f 45%,#1a3a28 46%,#0d1f14 100%)",
           border: "3px solid rgba(255,255,255,0.06)",
           cursor: locked ? "grabbing" : "pointer",
@@ -443,22 +443,6 @@ const BottleFlipGame = ({ onBack }) => {
 
       <p className="mt-3 text-center text-xs text-white/35">{TIPS[mode.id]}</p>
 
-      <style>{`
-        @keyframes windStreak {
-          0%   { transform: translateX(0);     opacity: 0   }
-          8%   { opacity: 0.55 }
-          85%  { opacity: 0.4  }
-          100% { transform: translateX(860px); opacity: 0   }
-        }
-        @keyframes windBadgeSway {
-          0%, 100% { transform: translateX(0px)  }
-          50%      { transform: translateX(3px)  }
-        }
-        @keyframes windEmojiPush {
-          0%, 100% { transform: translateX(0px) scaleX(1)    }
-          50%      { transform: translateX(2px) scaleX(1.15) }
-        }
-      `}</style>
     </div>
   );
 };

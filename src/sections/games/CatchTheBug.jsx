@@ -22,9 +22,8 @@ const pickType = () => {
   return "normal";
 };
 
-let idCounter = 0;
-
 const CatchTheBugGame = ({ onBack }) => {
+  const idCounter = useRef(0);
   const [gameState, setGameState] = useState("idle");
   const [score, setScore]         = useState(0);
   const [caught, setCaught]       = useState(0);
@@ -43,7 +42,7 @@ const CatchTheBugGame = ({ onBack }) => {
   const spawnBug = useCallback(() => {
     if (!areaRef.current || !gameActiveRef.current) return;
     const { width, height } = areaRef.current.getBoundingClientRect();
-    const id   = ++idCounter;
+    const id   = ++idCounter.current;
     const type = pickType();
     const cfg  = BUG_CFG[type];
     const phase    = getPhase(timeLeftRef.current);
@@ -123,7 +122,7 @@ const CatchTheBugGame = ({ onBack }) => {
     setCaught((c) => c + 1);
     setBugs((b) => b.filter((bug) => bug.id !== id));
 
-    const sid = ++idCounter;
+    const sid = ++idCounter.current;
     setSplats((s) => [...s, { id: sid, x, y }]);
     setPopups((p) => [...p, { id: sid, x, y, label: cfg.label, color: cfg.color }]);
     setTimeout(() => {
@@ -147,7 +146,7 @@ const CatchTheBugGame = ({ onBack }) => {
         onClick={onBack}
         className="mb-6 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
       >
-        ← Back to Games
+        <span className="leading-none">←</span><span>Back to Games</span>
       </button>
 
       <div className="mx-auto mb-4 flex max-w-2xl items-center justify-between px-2">
@@ -174,7 +173,7 @@ const CatchTheBugGame = ({ onBack }) => {
         className="relative mx-auto overflow-hidden rounded-3xl"
         style={{
           maxWidth: 700,
-          height: 360,
+          height: "clamp(280px, 55vh, 360px)",
           background: "linear-gradient(160deg,#1a1a2e,#16213e)",
           border: "3px solid rgba(255,255,255,0.06)",
           cursor: gameState === "playing" ? "crosshair" : "default",
@@ -297,11 +296,6 @@ const CatchTheBugGame = ({ onBack }) => {
           </div>
         ))}
 
-        <style>{`
-          @keyframes bugIn    { from { opacity:0; transform:scale(0) } to { opacity:1; transform:scale(1) } }
-          @keyframes splatOut { 0%  { opacity:1; transform:scale(1.5) } 100% { opacity:0; transform:scale(0.5) } }
-          @keyframes popupUp  { 0%  { opacity:1; transform:translateY(0) } 100% { opacity:0; transform:translateY(-28px) } }
-        `}</style>
       </div>
     </div>
   );

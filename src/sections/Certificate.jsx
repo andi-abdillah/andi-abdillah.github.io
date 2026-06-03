@@ -10,8 +10,8 @@ const Certificate = () => {
         Licenses & Certifications
       </h1>
       <div className="mx-auto mt-20 grid max-w-lg gap-x-16 gap-y-10 lg:max-w-screen-lg lg:grid-cols-2 lg:px-32">
-        {Data.map((item, index) => (
-          <div className="flex gap-4" key={index}>
+        {Data.map((item) => (
+          <div className="flex gap-4" key={item.name}>
             <img
               className="mt-1 h-10 w-10"
               src={images[`../assets/certificates/${item.logo}`]?.default || ""}
@@ -23,7 +23,7 @@ const Certificate = () => {
                 <p className="font-light text-gray-600">{item.organization}</p>
               </div>
               <div className="mt-4">
-                <a href={item.url} target="_blank">
+                <a href={item.url} target="_blank" rel="noreferrer">
                   <button className="flex items-center gap-1 rounded-full border border-primary px-7 py-2 font-futura leading-none uppercase text-primary hover:bg-primary hover:text-white">
                     Show Credentials <IoMdArrowForward />
                   </button>

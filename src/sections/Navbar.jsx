@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 import Logo from "../assets/logo.png";
 
-const Navbar = () => {
-  const [isScrolled, setIsScrolled]     = useState(false);
-  const [isVisible, setIsVisible]       = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
-  const [isOpen, setIsOpen]             = useState(false);
+const MENU_ITEMS = [
+  { label: "home" },
+  { label: "services" },
+  { label: "portfolio" },
+  { label: "contact" },
+];
 
-  const menuItems = [
-    { label: "home" },
-    { label: "services" },
-    { label: "portfolio" },
-    { label: "contact" },
-  ];
+const Navbar = () => {
+  const [isScrolled, setIsScrolled]       = useState(false);
+  const [isVisible, setIsVisible]         = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const [isOpen, setIsOpen]               = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = menuItems.map((item) => document.getElementById(item.label));
+      const sections = MENU_ITEMS.map((item) => document.getElementById(item.label));
       let current = "";
       sections.forEach((section) => {
         if (section && window.pageYOffset >= section.offsetTop - 100)
@@ -52,7 +52,7 @@ const Navbar = () => {
 
         {/* Desktop menu */}
         <ul className="hidden gap-10 font-futura font-semibold md:flex">
-          {menuItems.map((item, index) => (
+          {MENU_ITEMS.map((item, index) => (
             <li key={index}>
               <a
                 href={`#${item.label}`}
@@ -95,7 +95,7 @@ const Navbar = () => {
         }}
       >
         <ul className="space-y-6 py-6 text-center font-futura text-lg uppercase text-white">
-          {menuItems.map((item, index) => (
+          {MENU_ITEMS.map((item, index) => (
             <li
               key={index}
               style={{

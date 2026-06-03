@@ -4,28 +4,28 @@ import { FaLinkedinIn, FaGithub } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { IoSend } from "react-icons/io5";
 
-const GREETING = "Hai! Mau tahu apa tentang aku?";
+const GREETING = "Hey! What would you like to know about me?";
 
 const SUGGESTIONS = [
   {
-    q: "Biasanya ngerjain proyek apa aja?",
-    a: "Paling sering web app full-stack: company profile, sistem tiket, sampai ERP perusahaan. Andalannya Laravel sama React.",
+    q: "What kind of projects do you work on?",
+    a: "Mostly full-stack web apps: company profiles, ticketing systems, and ERPs. My go-to stack is Laravel and React.",
   },
   {
-    q: "Apa sih yang bikin kamu beda?",
-    a: "Aku nggak cuma ngejar 'yang penting jalan'. Kodenya aku rapiin, tampilannya aku bikin enak dipakai. Soalnya yang make kan bukan aku doang.",
+    q: "What makes you different?",
+    a: "I don't just make things work — I make them clean and enjoyable to use. Because the end user isn't me.",
   },
   {
-    q: "Berapa lama ngerjain satu proyek?",
-    a: "Tergantung skalanya. Yang simpel bisa seminggu, kalau udah ada database, login, dan banyak fitur ya sebulanan.",
+    q: "How long does a project take?",
+    a: "Depends on the scope. Simple ones can be done in a week. If it involves databases, auth, and multiple features, expect around a month.",
   },
   {
-    q: "Gimana cara mulai kerja bareng?",
-    a: "Tinggal colek aku lewat email atau LinkedIn di bawah, atau ketik aja di sini. Ceritain mau bikin apa, kita ngobrol santai dulu.",
+    q: "How do we start working together?",
+    a: "Just reach out via email or LinkedIn below, or type right here. Tell me what you want to build and we'll take it from there.",
   },
   {
-    q: "🐛 Mau main game dulu?",
-    a: "Haha boleh! Ada mini game di bawah, coba tangkep bug sebanyak mungkin dalam 30 detik. Scroll aja ke bawah ya 👇",
+    q: "🐛 Want to play a game first?",
+    a: "Sure! There are mini games below, scroll down to check them out. 👇",
     scroll: true,
   },
 ];
@@ -60,11 +60,12 @@ const TypingDots = () => (
 const Contact = () => {
   const [messages, setMessages] = useState([
     { role: "bot", text: GREETING },
-    { role: "bot", text: "Oh iya, kalau mau aku bisa bales, sertakan email atau nomor WA kamu di pesan ya." },
+    { role: "bot", text: "If you'd like a reply, please include your email or WhatsApp number in your message." },
   ]);
   const [suggestions, setSuggestions] = useState(SUGGESTIONS);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+  const [sending, setSending] = useState(false);
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -91,8 +92,6 @@ const Contact = () => {
     }
   };
 
-  const [sending, setSending] = useState(false);
-
   const handleSend = (e) => {
     e.preventDefault();
     const text = input.trim();
@@ -104,40 +103,31 @@ const Contact = () => {
 
     emailjs
       .send(
-        "my_portfolio",
-        "template_gqerwxr",
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
           from_name: "Website Chat",
-          from_email: "(tidak dicantumkan)",
+          from_email: "(not provided)",
           to_name: "Amin Abdillah",
           message: text,
           reply_to: "",
         },
-        { publicKey: "IbAI6dqRBxQejN0HU" },
+        { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY },
       )
       .then(() => {
         setTyping(false);
         setSending(false);
-        setMessages((m) => [...m, { role: "bot", text: "Pesan kamu udah masuk ke email aku! Aku usahain bales secepatnya. Kalau belum sempat cantumin kontak kamu di pesan tadi, DM aku aja lewat ikon di bawah ya." }]);
+        setMessages((m) => [...m, { role: "bot", text: "Your message has been sent! I'll get back to you as soon as I can. If you forgot to include your contact details, feel free to reach out via the icons below." }]);
       })
       .catch(() => {
         setTyping(false);
         setSending(false);
-        setMessages((m) => [...m, { role: "bot", text: "Aduh, gagal ngirim nih. Coba lagi atau langsung colek aku lewat ikon email/LinkedIn di bawah ya." }]);
+        setMessages((m) => [...m, { role: "bot", text: "Oops, something went wrong. Please try again or reach out directly via email or LinkedIn below." }]);
       });
   };
 
   return (
     <section id="contact" className="bg-primary px-8 py-14">
-      <style>{`
-        @keyframes chatbounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
-        .chat-scroll{scrollbar-width:none;-ms-overflow-style:none}.chat-scroll::-webkit-scrollbar{display:none}
-        @keyframes msgInLeft{from{opacity:0;transform:translateX(-16px) scale(0.92)}to{opacity:1;transform:translateX(0) scale(1)}}
-        @keyframes msgInRight{from{opacity:0;transform:translateX(16px) scale(0.92)}to{opacity:1;transform:translateX(0) scale(1)}}
-        .msg-bot{animation:msgInLeft 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards}
-        .msg-user{animation:msgInRight 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards}
-      `}</style>
-
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
         {/* Left */}
         <div className="lg:col-span-1">
@@ -163,7 +153,10 @@ const Contact = () => {
                 </div>
               ) : (
                 <div key={i} className="msg-user flex justify-end">
-                  <div className="max-w-[80%] rounded-2xl rounded-tr-sm bg-primary px-4 py-2.5 text-left text-sm leading-relaxed text-white" style={{ background: "#5a14b4" }}>
+                  <div
+                    className="max-w-[80%] rounded-2xl rounded-tr-sm px-4 py-2.5 text-left text-sm leading-relaxed text-white"
+                    style={{ background: "var(--color-primary, #741ce8)" }}
+                  >
                     {msg.text}
                   </div>
                 </div>
@@ -195,25 +188,25 @@ const Contact = () => {
             </div>
           )}
 
-          {/* Input + social — satu baris di desktop, icons di bawah di mobile */}
+          {/* Input + social */}
           <form onSubmit={handleSend} className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-center">
-            {/* Input + send — satu pill */}
             <div className="flex flex-1 items-center gap-2 rounded-full bg-[#2a2a2a] pl-5 pr-1.5 py-1.5 focus-within:ring-2 focus-within:ring-primary">
+              <label htmlFor="chat-input" className="sr-only">Message</label>
               <input
+                id="chat-input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Message..."
-                className="flex-1 bg-transparent text-sm text-white placeholder-white/40 outline-none"
+                className="flex-1 bg-transparent text-sm text-white placeholder-white/60 outline-none"
               />
               <button
                 type="submit"
-                aria-label="Send"
+                aria-label="Send message"
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-opacity hover:opacity-80"
               >
                 <IoSend className="text-sm" />
               </button>
             </div>
-            {/* Social icons — kiri desktop, bawah mobile */}
             <div className="flex items-center justify-center gap-1.5 sm:order-first">
               {socialLinks.map((link) => (
                 <a

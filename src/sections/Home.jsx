@@ -116,7 +116,7 @@ const Home = () => {
               <img
                 draggable="false"
                 src={portfolioImages[`../assets/portfolio/${card.src}`]?.default}
-                alt=""
+                alt="Portfolio project screenshot"
                 style={{ width: "100%", display: "block", userSelect: "none", filter: "drop-shadow(0px 20px 40px rgba(0,0,0,0.4))" }}
               />
             </div>

@@ -68,7 +68,7 @@ const SkillCard = ({ title, items, icon, inView, gradient, textColor, time }) =>
           {icon}
         </div>
         <h2 className="mb-3 font-futura text-lg font-bold uppercase" style={{ color: textColor }}>{title}</h2>
-        <ul className="space-y-0.5 text-sm" style={{ color: textColor + "cc" }}>
+        <ul className="space-y-0.5 text-sm" style={{ color: textColor, opacity: 0.85 }}>
           {items.map((item, index) => (
             <li key={index}>{item}</li>
           ))}
@@ -115,13 +115,12 @@ const Abilities = () => {
   const cards = [
     { title: "Frontend",  items: frontendSkills, icon: <TbBrandHtml5 />, gradient: "linear-gradient(160deg, #0f0c29, #302b63, #24243e)", textColor: "#ffffff" },
     { title: "Backend",   items: backendSkills,  icon: <TbServer />,     gradient: "linear-gradient(160deg, #134e5e, #71b280)", textColor: "#ffffff" },
-    { title: "Dev Tools", items: devTools,       icon: <TbBrandGithub />,gradient: "linear-gradient(160deg, #f7971e, #ffd200)", textColor: "#1a1a1a" },
+    { title: "Dev Tools", items: devTools,       icon: <TbBrandGithub />,gradient: "linear-gradient(160deg, #f7971e, #ffd200)", textColor: "#111111" },
     { title: "Other",     items: otherSkills,    icon: <TbCloud />,      gradient: "linear-gradient(160deg, #c94b4b, #4b134f)", textColor: "#ffffff" },
   ];
 
   return (
     <section id="abilities" ref={sectionRef} className="bg-primary px-10 py-24">
-      <style>{``}</style>
       <h1 className="mb-16 text-center font-futura text-5xl font-extrabold uppercase leading-tight text-white">
         Expertise
       </h1>

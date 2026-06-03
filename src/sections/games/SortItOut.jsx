@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import shuffle from "../../utils/shuffle";
 
 const GAME_DURATION = 45;
 
@@ -53,7 +54,6 @@ const ROUND_SIZE = 16;
 const CARD_W = 130;
 const CARD_H = 130;
 
-const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
 const SortItOutGame = ({ onBack }) => {
   const [gameState, setGameState]     = useState("idle");
@@ -191,7 +191,7 @@ const SortItOutGame = ({ onBack }) => {
         onClick={onBack}
         className="mb-6 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
       >
-        ← Back to Games
+        <span className="leading-none">←</span><span>Back to Games</span>
       </button>
 
       {/* ── IDLE ── */}
@@ -377,15 +377,6 @@ const SortItOutGame = ({ onBack }) => {
         </div>
       )}
 
-      <style>{`
-        @keyframes shake {
-          0%,100% { transform: translateX(0) }
-          20%     { transform: translateX(-8px) }
-          40%     { transform: translateX(8px) }
-          60%     { transform: translateX(-5px) }
-          80%     { transform: translateX(5px) }
-        }
-      `}</style>
     </div>
   );
 };
