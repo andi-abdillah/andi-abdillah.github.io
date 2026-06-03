@@ -6,6 +6,12 @@ const TRAY_CENTER  = 90;
 const TRAY_AMP     = 75;
 const TRAY_SPD     = 0.025;
 
+// Precision tuning
+const BASE_SENS   = 3.2;  // landing-angle error (deg) per 1% power off the ideal
+const BASE_JITTER = 3;    // random landing wobble (deg), grows when power is sloppy
+const PERFECT_TOL = 7;    // land within this many deg of upright = Perfect
+const TOL_MIN     = 10;   // floor for landing tolerance (deg)
+
 const BOTTLES = [
   { id:"classic", label:"Half Full", fill:"60%", body:"rgba(125,211,252,0.25)", liquid:"linear-gradient(180deg,#38bdf8,#0ea5e9)", cap:"#1e3a8a", stability:1.08, spin:1.0  },
   { id:"small",   label:"Small",    fill:"45%", body:"rgba(167,243,208,0.22)", liquid:"linear-gradient(180deg,#86efac,#22c55e)", cap:"#166534", stability:0.9,  spin:1.18 },
@@ -15,24 +21,15 @@ const BOTTLES = [
 // startX: bottle x at idle/charge (offset from arena center)
 // tableX: landing surface center offset
 // tableW: landing surface width
-// ideal/window: power guidance
-// tolerance: rotation tolerance in degrees
+// ideal: power that lands the bottle perfectly upright
+// tolerance: base landing tolerance in degrees (scaled by bottle stability)
+// turns: full flips the bottle completes mid-air
 // bonus: score per land
-const WIND_STREAKS = [
-  { top: 11, width: 38, delay: 0,    dur: 1.5 },
-  { top: 24, width: 24, delay: 0.35, dur: 1.2 },
-  { top: 38, width: 52, delay: 0.7,  dur: 1.8 },
-  { top: 52, width: 30, delay: 0.15, dur: 1.35 },
-  { top: 65, width: 44, delay: 0.55, dur: 1.1 },
-  { top: 78, width: 20, delay: 0.85, dur: 1.6 },
-  { top: 18, width: 16, delay: 0.5,  dur: 1.0 },
-  { top: 58, width: 35, delay: 0.9,  dur: 1.4 },
-];
 
 const MODES = [
-  { id:"default",      label:"Classic",     startX:0,    tableX:0,   tableW:160, ideal:50, window:25, tolerance:52, bonus:1 },
-  { id:"table_throw",  label:"Table Throw", startX:-130, tableX:90,  tableW:110, ideal:45, window:18, tolerance:60, bonus:2 },
-  { id:"sliding_tray", label:"Sliding Tray",startX:-130, tableX:90,  tableW:120,   ideal:45, window:18, tolerance:52, bonus:3 },
+  { id:"default",      label:"Classic",     startX:0,    tableX:0,   tableW:160, ideal:50, tolerance:16, turns:1, bonus:1 },
+  { id:"table_throw",  label:"Table Throw", startX:-130, tableX:90,  tableW:110, ideal:45, tolerance:18, turns:1, bonus:2 },
+  { id:"sliding_tray", label:"Sliding Tray",startX:-130, tableX:90,  tableW:120, ideal:45, tolerance:16, turns:1, bonus:3 },
 ];
 
 const Bottle = ({ config, x, y, rot }) => (
@@ -59,6 +56,7 @@ const BottleFlipGame = ({ onBack }) => {
   const [modeIdx, setModeIdx]   = useState(0);
   const [bottleIdx, setBottleIdx] = useState(0);
   const [windOn, setWindOn]     = useState(false);
+  const [gusts, setGusts]       = useState([]);
 
   const dirRef      = useRef(1);
   const powerRef    = useRef(0);
@@ -70,6 +68,8 @@ const BottleFlipGame = ({ onBack }) => {
   const trayRafRef     = useRef(null);
   const trayTickRef    = useRef(0);
   const bottleOnTrayRef = useRef(false);
+  const gustSpawnRef   = useRef(null);
+  const gustsRef       = useRef([]);
 
   const mode    = MODES[modeIdx];
   const bConfig = BOTTLES[bottleIdx];
@@ -79,7 +79,38 @@ const BottleFlipGame = ({ onBack }) => {
     cancelAnimationFrame(chargeRaf.current);
     cancelAnimationFrame(flipRaf.current);
     cancelAnimationFrame(trayRafRef.current);
+    clearTimeout(gustSpawnRef.current);
   }, []);
+
+  // Keep gustsRef in sync for physics reads inside rAF loop
+  useEffect(() => { gustsRef.current = gusts; }, [gusts]);
+
+  // Spawn wind gusts dynamically when wind is on
+  useEffect(() => {
+    if (!windOn) { clearTimeout(gustSpawnRef.current); setGusts([]); return; }
+    let alive = true;
+    const spawn = () => {
+      if (!alive) return;
+      const r          = Math.random();
+      const strength   = r < 0.5 ? "light" : r < 0.85 ? "medium" : "strong";
+      const dir        = Math.random() > 0.5 ? 1 : -1;
+      const vxPush     = strength === "light" ? 0.05 : strength === "medium" ? 0.12 : 0.20;
+      const rotPush    = strength === "light" ? 0.35 : strength === "medium" ? 0.75 : 1.30;
+      const duration   = 700 + Math.random() * 500;
+      const id         = Date.now() + Math.random();
+      const streamCount = strength === "strong" ? 4 : strength === "medium" ? 3 : 2;
+      const streaks    = Array.from({ length: streamCount }, () => ({
+        top:   10 + Math.random() * 80,
+        width: 20 + Math.random() * 40,
+        delay: Math.random() * 0.15,
+      }));
+      setGusts(g => [...g, { id, dir, vxPush, rotPush, strength, duration, streaks }]);
+      setTimeout(() => setGusts(g => g.filter(x => x.id !== id)), duration + 200);
+      gustSpawnRef.current = setTimeout(spawn, 500 + Math.random() * 1800);
+    };
+    gustSpawnRef.current = setTimeout(spawn, 300 + Math.random() * 500);
+    return () => { alive = false; clearTimeout(gustSpawnRef.current); setGusts([]); };
+  }, [windOn]);
 
   useEffect(() => { phaseRef.current = phase; }, [phase]);
 
@@ -107,6 +138,7 @@ const BottleFlipGame = ({ onBack }) => {
   const changeMode = (e, i) => {
     e.stopPropagation();
     if (locked) return;
+    cancelAnimationFrame(flipRaf.current);
     const m = MODES[i];
     setModeIdx(i);
     setBottle({ x: m.startX, y: 0, rot: 0 });
@@ -118,6 +150,7 @@ const BottleFlipGame = ({ onBack }) => {
 
   const startCharge = () => {
     if (phaseRef.current === "charging" || phaseRef.current === "flipping") return;
+    cancelAnimationFrame(flipRaf.current);
     setBottle({ x: mode.startX, y: 0, rot: 0 });
     setResult(null);
     bottleOnTrayRef.current = false;
@@ -148,22 +181,42 @@ const BottleFlipGame = ({ onBack }) => {
 
     x = m.startX; rot = 0;
 
-    const windForce = windOn ? (Math.random() > 0.5 ? 1 : -1) * 0.16 * (0.4 + p / 100) : 0;
-
     if (m.id === "table_throw" || m.id === "sliding_tray") {
-      vx        = 3 + (p / 100) * 8 + windForce * 1.8;
-      vy        = 4 + (p / 100) * 9;
-      spinSpeed = (6 + p / 11) * bc.spin;
+      vx = 3 + (p / 100) * 8;
+      vy = 4 + (p / 100) * 9;
     } else {
-      vx        = windForce;
-      vy        = 5 + (p / 100) * 12;
-      spinSpeed = (7.2 + p / 9) * bc.spin;
+      vx = 0;
+      vy = 5 + (p / 100) * 12;
     }
+
+    // Rotation is driven by how precisely the power matches the mode's ideal.
+    // Hitting ideal lands the bottle upright; every percent off rotates the
+    // landing away from vertical, so power accuracy directly decides success.
+    const powerOff   = p - m.ideal;
+    const sens       = BASE_SENS * bc.spin;
+    const jitterAmp  = BASE_JITTER + Math.abs(powerOff) * 0.06;
+    const jitter     = (Math.random() * 2 - 1) * jitterAmp;
+    const landingErr = powerOff * sens + jitter;
+    const totalRot   = 360 * m.turns + landingErr;
+
+    // Pre-simulate the vertical arc to get the exact frame count, then spread
+    // the full rotation across it so the bottle completes totalRot on landing.
+    let simVy = vy, simY = 0, flightFrames = 0;
+    do {
+      simVy -= GRAVITY;
+      simY  += simVy;
+      flightFrames++;
+    } while (simY > 0 && flightFrames < 1000);
+    spinSpeed = totalRot / flightFrames;
 
     let y = 0;
 
     const loop = () => {
       vy -= GRAVITY;
+      for (const gust of gustsRef.current) {
+        vx  += gust.dir * gust.vxPush;
+        rot += gust.rotPush;
+      }
       y  += vy;
       x  += vx;
       rot += spinSpeed;
@@ -172,8 +225,7 @@ const BottleFlipGame = ({ onBack }) => {
         const mod  = ((rot % 360) + 360) % 360;
         const base = Math.round(rot / 360) * 360;
         const dist = Math.min(mod, 360 - mod);
-        const powerMiss = Math.abs(p - m.ideal);
-        const tol   = Math.max(20, m.tolerance * bc.stability - powerMiss * 0.4);
+        const tol   = Math.max(TOL_MIN, m.tolerance * bc.stability);
         const rotOK = dist <= tol;
 
         let posOK = true;
@@ -190,10 +242,10 @@ const BottleFlipGame = ({ onBack }) => {
 
         if (posOK && !rotOK) failText = "Bad rotation";
 
-        const landed   = rotOK && posOK;
-        const finalRot = landed ? base : base + (mod < 180 ? 88 : 272);
+        const landed  = rotOK && posOK;
+        const perfect = landed && dist <= PERFECT_TOL;
+        const restRot = landed ? base : base + (mod < 180 ? 88 : 272);
 
-        setBottle({ x, y: 0, rot: finalRot });
         setAttempts(a => a + 1);
         phaseRef.current = "result"; setPhase("result");
 
@@ -201,13 +253,33 @@ const BottleFlipGame = ({ onBack }) => {
           setStreak(st => {
             const ns = st + 1;
             setBest(b => Math.max(b, ns));
-            setScore(sc => sc + m.bonus + (ns > 1 ? ns - 1 : 0));
+            setScore(sc => sc + (perfect ? m.bonus * 2 : m.bonus) + (ns > 1 ? ns - 1 : 0));
             return ns;
           });
-          setResult({ type:"land", text: dist <= tol * 0.35 ? "Perfect!" : "Landed!" });
+          setResult({ type:"land", text: perfect ? "Perfect!" : "Landed!" });
         } else {
           setStreak(0);
           setResult({ type:"fall", text: failText });
+        }
+
+        // Landed bottles teeter briefly before settling; misses just tip over.
+        if (landed && m.id !== "sliding_tray") {
+          const wobbleAmp = Math.min(12, 4 + dist * 0.7);
+          let wt = 0;
+          const wobble = () => {
+            wt++;
+            const decay = Math.max(0, 1 - wt / 26);
+            const off   = Math.sin(wt * 0.65) * wobbleAmp * decay;
+            setBottle({ x, y: 0, rot: base + off });
+            if (wt < 26) {
+              flipRaf.current = requestAnimationFrame(wobble);
+            } else {
+              setBottle({ x, y: 0, rot: base });
+            }
+          };
+          flipRaf.current = requestAnimationFrame(wobble);
+        } else {
+          setBottle({ x, y: 0, rot: restRot });
         }
         return;
       }
@@ -232,7 +304,7 @@ const BottleFlipGame = ({ onBack }) => {
     sliding_tray: "Throw right, time the tray to be underneath",
   };
   const TIPS = {
-    default:      `Sweet spot: ${mode.ideal - mode.window}–${mode.ideal + mode.window}% power.`,
+    default:      `Hit close to ${mode.ideal}% power. The closer you are, the straighter it lands.`,
     table_throw:  "Power controls distance and rotation. Aim for the right table.",
     sliding_tray: "Same throw as Table Throw, but the tray moves. Time it right.",
   };
@@ -297,7 +369,7 @@ const BottleFlipGame = ({ onBack }) => {
         style={{
           maxWidth: 700,
           height: "clamp(280px, 55vh, 370px)",
-          background: "linear-gradient(180deg,#111827 0%,#1e3a5f 45%,#1a3a28 46%,#0d1f14 100%)",
+          background: "linear-gradient(180deg,#1a1a2e 0%,#16213e 45%,#13231c 46%,#0d1a12 100%)",
           border: "3px solid rgba(255,255,255,0.06)",
           cursor: locked ? "grabbing" : "pointer",
           boxShadow: "0 18px 50px rgba(0,0,0,0.35)",
@@ -307,21 +379,37 @@ const BottleFlipGame = ({ onBack }) => {
         onPointerLeave={release}
         onPointerCancel={release}
       >
-        {/* Wind streaks */}
-        {windOn && WIND_STREAKS.map((s, i) => (
-          <div
-            key={i}
-            className="pointer-events-none absolute rounded-full"
-            style={{
-              top:        `${s.top}%`,
-              left:       -64,
-              width:      s.width,
-              height:     2,
-              background: "rgba(147,197,253,0.45)",
-              animation:  `windStreak ${s.dur}s linear ${s.delay}s infinite`,
-            }}
-          />
-        ))}
+        {/* Grid overlay */}
+        <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.04]">
+          {[...Array(10)].map((_, i) => (
+            <line key={`v${i}`} x1={`${i * 10}%`} y1="0" x2={`${i * 10}%`} y2="100%" stroke="white" strokeWidth="1" />
+          ))}
+          {[...Array(6)].map((_, i) => (
+            <line key={`h${i}`} x1="0" y1={`${i * 20}%`} x2="100%" y2={`${i * 20}%`} stroke="white" strokeWidth="1" />
+          ))}
+        </svg>
+
+        {/* Dynamic wind gusts */}
+        {windOn && gusts.map(gust =>
+          gust.streaks.map((s, si) => (
+            <div
+              key={`${gust.id}-${si}`}
+              className="pointer-events-none absolute rounded-full"
+              style={{
+                top:        `${s.top}%`,
+                ...(gust.dir === 1 ? { left: -Math.ceil(s.width) } : { right: -Math.ceil(s.width) }),
+                width:      Math.ceil(s.width),
+                height:     gust.strength === "strong" ? 3 : 2,
+                background: gust.strength === "strong"
+                  ? "rgba(147,197,253,0.70)"
+                  : gust.strength === "medium"
+                  ? "rgba(147,197,253,0.50)"
+                  : "rgba(147,197,253,0.28)",
+                animation: `${gust.dir === 1 ? "windStreak" : "windStreakRTL"} ${(gust.duration / 1000).toFixed(2)}s linear ${s.delay}s forwards`,
+              }}
+            />
+          ))
+        )}
 
         {/* horizon */}
         <div className="pointer-events-none absolute left-0 right-0 top-[46%] h-px bg-white/[0.05]" />
@@ -364,16 +452,26 @@ const BottleFlipGame = ({ onBack }) => {
 
         <Bottle config={bConfig} x={bottle.x} y={bottle.y} rot={bottle.rot} />
 
-        {/* wind badge */}
-        {windOn && (
-          <div
-            className="pointer-events-none absolute right-4 top-3 flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-black/40 px-3 py-1"
-            style={{ animation: "windBadgeSway 2.2s ease-in-out infinite" }}
-          >
-            <span className="text-sm" style={{ display:"inline-block", animation:"windEmojiPush 1.1s ease-in-out infinite" }}>💨</span>
-            <span className="font-futura text-[10px] uppercase text-blue-300/90">Wind</span>
-          </div>
-        )}
+        {/* wind badge — shows live gust strength */}
+        {windOn && (() => {
+          const active = gusts.length > 0;
+          const strongest = gusts.some(g => g.strength === "strong") ? "strong"
+            : gusts.some(g => g.strength === "medium") ? "medium"
+            : gusts.length > 0 ? "light" : "none";
+          const LABEL = { none:"Calm", light:"Breezy", medium:"Windy", strong:"Strong" };
+          const COLOR = { none:"rgba(147,197,253,0.35)", light:"rgba(147,197,253,0.75)", medium:"#93c5fd", strong:"#bfdbfe" };
+          return (
+            <div
+              className="pointer-events-none absolute right-4 top-3 flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-black/40 px-3 py-1"
+              style={{ animation: active ? "windBadgeSway 2.2s ease-in-out infinite" : undefined }}
+            >
+              <span className="text-sm" style={{ display:"inline-block", animation: active ? "windEmojiPush 1.1s ease-in-out infinite" : undefined }}>💨</span>
+              <span className="font-futura text-[10px] uppercase" style={{ color: COLOR[strongest] }}>
+                {LABEL[strongest]}
+              </span>
+            </div>
+          );
+        })()}
 
         {/* result */}
         {result && phase === "result" && (
@@ -396,7 +494,7 @@ const BottleFlipGame = ({ onBack }) => {
           <div className="rounded-xl border border-white/8 bg-black/45 px-2.5 py-2 backdrop-blur-sm">
             <p className="text-[9px] uppercase text-white/35">{mode.label}</p>
             {mode.id === "default" && (
-              <p className="font-futura text-xs font-bold text-white">{mode.ideal - mode.window}–{mode.ideal + mode.window}% power</p>
+              <p className="font-futura text-xs font-bold text-white">Hit {mode.ideal}% power</p>
             )}
             {mode.id === "table_throw" && (
               <p className="font-futura text-[10px] font-bold text-white/60">Aim for the table</p>
@@ -428,7 +526,7 @@ const BottleFlipGame = ({ onBack }) => {
           <p className="text-[10px] uppercase text-white/35">{mode.label}</p>
           {mode.id === "default" && (
             <>
-              <p className="font-futura text-base font-bold text-white">{mode.ideal - mode.window}–{mode.ideal + mode.window}%</p>
+              <p className="font-futura text-base font-bold text-white">{mode.ideal}%</p>
               <p className="text-[9px] uppercase text-white/30">target power</p>
             </>
           )}

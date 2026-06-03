@@ -28,12 +28,32 @@ const ProjectItem = ({ item, onNoLink }) => {
       }}
     >
       <div>
-        <img
-          className="m-auto h-44 md:h-64 lg:h-72"
-          draggable="false"
-          src={images[`../assets/portfolio/${item.image}`]?.default || ""}
-          alt={item.name}
-        />
+        {(() => {
+          const imgSrc = images[`../assets/portfolio/${item.image}`]?.default || "";
+          return (
+            <div className="portfolio-item relative m-auto w-fit">
+              <img
+                className="h-44 md:h-64 lg:h-72"
+                draggable="false"
+                src={imgSrc}
+                alt={item.name}
+              />
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  WebkitMaskImage: `url(${imgSrc})`,
+                  maskImage:       `url(${imgSrc})`,
+                  WebkitMaskSize:  "100% 100%",
+                  maskSize:        "100% 100%",
+                }}
+              >
+                <div
+                  className="portfolio-shimmer absolute bottom-0 left-0 top-0 w-1/3 bg-gradient-to-r from-transparent via-white/[0.18] to-transparent"
+                />
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       <div className="my-auto max-w-md space-y-5 text-center lg:text-start">

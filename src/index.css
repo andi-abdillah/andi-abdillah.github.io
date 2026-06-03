@@ -88,11 +88,35 @@
 }
 
 @keyframes windStreak {
-  0%   { transform: translateX(0);     opacity: 0   }
+  0%   { transform: translateX(0);      opacity: 0   }
   8%   { opacity: 0.55 }
   85%  { opacity: 0.4  }
-  100% { transform: translateX(860px); opacity: 0   }
+  100% { transform: translateX(860px);  opacity: 0   }
 }
+@keyframes windStreakRTL {
+  0%   { transform: translateX(0);      opacity: 0   }
+  8%   { opacity: 0.55 }
+  85%  { opacity: 0.4  }
+  100% { transform: translateX(-860px); opacity: 0   }
+}
+/* Home cards: auto-loop, sweep is 0-21% of 8s (~1.7s visible) */
+@keyframes laptopShimmer {
+  0%        { transform: skewX(-15deg) translateX(-150%); opacity: 0; }
+  3%        { opacity: 1; }
+  21%       { transform: skewX(-15deg) translateX(450%);  opacity: 0; }
+  22%, 100% { transform: skewX(-15deg) translateX(-150%); opacity: 0; }
+}
+/* Portfolio: hover one-shot, sweep covers most of the duration */
+@keyframes laptopShimmerHover {
+  0%   { transform: skewX(-15deg) translateX(-150%); opacity: 0; }
+  3%   { opacity: 1; }
+  85%  { transform: skewX(-15deg) translateX(450%);  opacity: 0; }
+  100% { transform: skewX(-15deg) translateX(-150%); opacity: 0; }
+}
+
+.portfolio-shimmer { animation: none; opacity: 0; }
+.portfolio-item:hover .portfolio-shimmer { animation: laptopShimmerHover 2.2s ease-in-out forwards; }
+
 @keyframes windBadgeSway {
   0%, 100% { transform: translateX(0px) }
   50%      { transform: translateX(3px) }

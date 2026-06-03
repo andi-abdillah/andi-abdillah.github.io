@@ -4,23 +4,23 @@ const GAME_DURATION = 45;
 
 const GOOD_TABS = [
   { emoji: "📧", label: "Email: Job Interview Confirmation" },
-  { emoji: "🏦", label: "Bank Transfer Confirmation" },
-  { emoji: "📦", label: "Track My Package, Day 3" },
-  { emoji: "🏥", label: "Doctor Appointment, Thu 2pm" },
+  { emoji: "🏦", label: "BCA: Transfer Receipt" },
+  { emoji: "📦", label: "Shopee: Order on the Way" },
+  { emoji: "🏥", label: "BPJS Appointment, Monday 9am" },
   { emoji: "✈️", label: "Flight Booking, Step 2 of 3" },
   { emoji: "🧾", label: "Monthly Electricity Bill" },
   { emoji: "🎓", label: "Online Course, Chapter 4" },
-  { emoji: "🛒", label: "Shopping Cart, 3 items" },
+  { emoji: "🛒", label: "Tokopedia: Flash Sale Checkout" },
   { emoji: "📱", label: "Compare Smartphones" },
-  { emoji: "🏠", label: "Apartment Listings, 2BR" },
   { emoji: "🗺️", label: "Google Maps: Route to Home" },
-  { emoji: "📝", label: "Birthday Party Guest List" },
+  { emoji: "🍔", label: "GoFood Order, Arriving Soon" },
+  { emoji: "💳", label: "OVO: Top-Up Successful" },
 ];
 
 const BAD_TABS = [
   { emoji: "🎰", label: "WIN $1,000 NOW!!!" },
   { emoji: "🦠", label: "Your PC has 47 viruses" },
-  { emoji: "📹", label: "Cat fails compilation #318" },
+  { emoji: "🎵", label: "Just one more TikTok..." },
   { emoji: "🔔", label: "Allow Notifications? ALLOW?" },
   { emoji: "💊", label: "Cheap meds, no prescription!" },
   { emoji: "👻", label: "You've been selected!" },
@@ -30,10 +30,10 @@ const BAD_TABS = [
   { emoji: "📢", label: "Your account expires TODAY!" },
   { emoji: "🕹️", label: "Candy Crush wants you back!" },
   { emoji: "😍", label: "Hot singles in your area" },
-  { emoji: "🔄", label: "This page is reloading... (47×)" },
+  { emoji: "🔄", label: "This page is reloading... (47x)" },
   { emoji: "🎬", label: "Just one more YouTube video..." },
-  { emoji: "🍕", label: "Pizza deals, Sponsored Ad #47" },
-  { emoji: "🎲", label: "Online Casino, 500% BONUS" },
+  { emoji: "🛍️", label: "Shopee voucher expires in 5 mins!" },
+  { emoji: "🎲", label: "Online Slots - 100% Bonus!" },
   { emoji: "📲", label: "Download this app, earn money!" },
 ];
 
@@ -90,7 +90,7 @@ const TabCleanerGame = ({ onBack }) => {
     const pool  = isBad ? BAD_TABS : GOOD_TABS;
     const tmpl  = pool[Math.floor(Math.random() * pool.length)];
     const phase = getPhase(timeLeftRef.current);
-    const TAB_W = Math.min(200, Math.floor(width * 0.58));
+    const TAB_W = Math.min(240, Math.floor(width * 0.65));
     const TAB_H = 56;
     const GAP   = 8;
 
