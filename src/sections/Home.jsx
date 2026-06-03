@@ -4,10 +4,10 @@ const portfolioImages = import.meta.glob("../assets/portfolio/*", { eager: true 
 
 // Card 0 = paling bawah/belakang, card 3 = paling atas/depan
 const CARDS = [
-  { src: "csirt-bangkalankab.png", rotate: -12, ty: "5%",  phase: 0.0 },
-  { src: "tiket-bangkalankab.png", rotate: -2,  ty: "-6%", phase: 1.2 },
-  { src: "pen-paper.png",          rotate: 8,   ty: "5%",  phase: 2.4 },
-  { src: "puspetindo.png",         rotate: 12,  ty: "-4%", phase: 3.6 },
+  { src: "csirt-bangkalankab.webp", rotate: -12, ty: "5%",  phase: 0.0 },
+  { src: "tiket-bangkalankab.webp", rotate: -2,  ty: "-6%", phase: 1.2 },
+  { src: "pen-paper.webp",          rotate: 8,   ty: "5%",  phase: 2.4 },
+  { src: "puspetindo.webp",         rotate: 12,  ty: "-4%", phase: 3.6 },
 ];
 
 const lerp = (a, b, t) => a + (b - a) * t;

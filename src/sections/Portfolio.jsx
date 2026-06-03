@@ -35,6 +35,7 @@ const ProjectItem = ({ item, onNoLink }) => {
               <img
                 className="h-44 md:h-64 lg:h-72"
                 draggable="false"
+                loading="lazy"
                 src={imgSrc}
                 alt={item.name}
               />

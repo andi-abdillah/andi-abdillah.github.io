@@ -251,6 +251,7 @@ const CatchTheBugGame = ({ onBack }) => {
           return (
             <button
               key={bug.id}
+              aria-label={`Catch ${bug.type} bug`}
               onClick={() => catchBug(bug.id, bug.x, bug.y, bug.type)}
               className={`absolute flex select-none items-center justify-center ${cfg.sizeClass} hover:scale-125 active:scale-75`}
               style={{

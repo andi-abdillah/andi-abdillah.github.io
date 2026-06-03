@@ -402,6 +402,7 @@ const TabCleanerGame = ({ onBack }) => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              aria-label={`Close tab: ${tab.label}`}
               onClick={() => closeTab(tab.id, tab.type, tab.emoji, tab.label)}
               className="absolute overflow-hidden rounded-xl text-left transition-transform hover:scale-[1.03] active:scale-95"
               style={{

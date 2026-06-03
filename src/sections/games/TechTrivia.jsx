@@ -342,6 +342,7 @@ const TechTriviaGame = ({ onBack }) => {
               return (
                 <button
                   key={opt}
+                  aria-label={`Answer: ${opt}`}
                   onClick={() => answer(opt)}
                   className="rounded-xl px-5 py-4 text-left text-sm font-medium text-white transition-all hover:opacity-80"
                   style={{ background: bg, border: `2px solid ${border}` }}
