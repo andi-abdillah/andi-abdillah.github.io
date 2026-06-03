@@ -54,10 +54,11 @@ const BottleFlipGame = ({ onBack }) => {
   const phaseRef    = useRef("idle");
   const chargeRaf   = useRef(null);
   const flipRaf     = useRef(null);
-  const trayXRef    = useRef(0);
-  const trayElRef   = useRef(null);
-  const trayRafRef  = useRef(null);
-  const trayTickRef = useRef(0);
+  const trayXRef       = useRef(0);
+  const trayElRef      = useRef(null);
+  const trayRafRef     = useRef(null);
+  const trayTickRef    = useRef(0);
+  const bottleOnTrayRef = useRef(false);
 
   const mode    = MODES[modeIdx];
   const bConfig = BOTTLES[bottleIdx];
@@ -82,6 +83,9 @@ const BottleFlipGame = ({ onBack }) => {
       trayXRef.current = x;
       if (trayElRef.current) {
         trayElRef.current.style.left = `calc(50% + ${x}px)`;
+      }
+      if (bottleOnTrayRef.current) {
+        setBottle(b => ({ ...b, x }));
       }
       trayRafRef.current = requestAnimationFrame(animate);
     };
@@ -114,6 +118,7 @@ const BottleFlipGame = ({ onBack }) => {
     if (phaseRef.current === "charging" || phaseRef.current === "flipping") return;
     setBottle({ x: mode.startX, y: 0, rot: 0 });
     setResult(null);
+    bottleOnTrayRef.current = false;
     setPower(0); powerRef.current = 0; dirRef.current = 1;
     phaseRef.current = "charging"; setPhase("charging");
     const loop = () => {
@@ -176,7 +181,8 @@ const BottleFlipGame = ({ onBack }) => {
           if (!posOK) failText = x < m.tableX ? "Too short" : "Overshot";
         } else if (m.id === "sliding_tray") {
           posOK = Math.abs(x - trayXRef.current) < TRAY_W / 2 - 5;
-          if (!posOK) failText = "Missed the tray";
+          if (posOK) bottleOnTrayRef.current = true;
+          else failText = "Missed the tray";
         }
 
         if (posOK && !rotOK) failText = "Bad rotation";
@@ -225,7 +231,7 @@ const BottleFlipGame = ({ onBack }) => {
   const TIPS = {
     default:      `Sweet spot: ${mode.ideal - mode.window}–${mode.ideal + mode.window}% power.`,
     table_throw:  "Power controls distance and rotation. Aim for the right table.",
-    sliding_tray: "Same throw as Table Throw — but the tray moves. Time it right.",
+    sliding_tray: "Same throw as Table Throw, but the tray moves. Time it right.",
   };
 
   return (
@@ -246,9 +252,9 @@ const BottleFlipGame = ({ onBack }) => {
       </div>
 
       {/* Controls — all outside arena, all stopPropagation */}
-      <div className="mx-auto mb-3 flex max-w-2xl flex-col gap-2 px-2 sm:flex-row sm:items-center">
-        {/* Mode */}
-        <div className="flex flex-1 gap-2">
+      <div className="mx-auto mb-3 flex max-w-2xl flex-col gap-2 px-2">
+        {/* Mode row — always full width so text never wraps due to sibling changes */}
+        <div className="flex gap-2">
           {MODES.map((m, i) => (
             <button
               key={m.id}
@@ -315,31 +321,29 @@ const BottleFlipGame = ({ onBack }) => {
           <div className="pointer-events-none absolute bottom-7 left-1/2 h-3 -translate-x-1/2 rounded-full"
             style={{ width: mode.tableW, background: "#8b5a2b", boxShadow: "0 10px 28px rgba(0,0,0,0.45)" }} />
         )}
-        {mode.id === "table_throw" && (
-          <>
-            {/* left stand */}
-            <div className="pointer-events-none absolute bottom-7 rounded-full"
-              style={{ left: `calc(50% + ${mode.startX}px)`, transform: "translateX(-50%)", width: 52, height: 7, background: "#5a3a1a", boxShadow: "0 8px 18px rgba(0,0,0,0.4)" }} />
-            {/* right table */}
-            <div className="pointer-events-none absolute bottom-7 rounded-full"
-              style={{ left: `calc(50% + ${mode.tableX}px)`, transform: "translateX(-50%)", width: mode.tableW, height: 10, background: "#7a4825", boxShadow: "0 12px 28px rgba(0,0,0,0.5)" }} />
-          </>
-        )}
+        {mode.id === "table_throw" && (() => {
+          const tX = mode.tableX, tW = mode.tableW;
+          return (
+            <>
+              {/* table top */}
+              <div className="pointer-events-none absolute rounded-sm"
+                style={{ bottom: 32, left: `calc(50% + ${tX}px)`, transform: "translateX(-50%)", width: tW, height: 12, background: "#7a4825", boxShadow: "0 6px 20px rgba(0,0,0,0.5)" }} />
+              {/* left leg */}
+              <div className="pointer-events-none absolute rounded-sm"
+                style={{ bottom: 4, left: `calc(50% + ${tX - tW / 2 + 4}px)`, width: 9, height: 28, background: "#5a3a1a" }} />
+              {/* right leg */}
+              <div className="pointer-events-none absolute rounded-sm"
+                style={{ bottom: 4, left: `calc(50% + ${tX + tW / 2 - 13}px)`, width: 9, height: 28, background: "#5a3a1a" }} />
+            </>
+          );
+        })()}
         {mode.id === "sliding_tray" && (
-          <>
-            {/* left stand */}
-            <div className="pointer-events-none absolute bottom-7 rounded-full"
-              style={{ left: `calc(50% + ${mode.startX}px)`, transform: "translateX(-50%)", width: 52, height: 7, background: "#5a3a1a", boxShadow: "0 8px 18px rgba(0,0,0,0.4)" }} />
-            {/* right base surface */}
-            <div className="pointer-events-none absolute bottom-7 rounded-full"
-              style={{ left: `calc(50% + ${mode.tableX}px)`, transform: "translateX(-50%)", width: mode.tableW, height: 10, background: "#5a3a1a", boxShadow: "0 12px 28px rgba(0,0,0,0.5)" }} />
-            {/* moving tray on top — DOM-animated via ref */}
-            <div
-              ref={trayElRef}
-              className="pointer-events-none absolute rounded-md"
-              style={{ bottom: "36px", left: "50%", transform: "translateX(-50%)", width: TRAY_W, height: 7, background: "#b8953a", boxShadow: "0 4px 16px rgba(0,0,0,0.5)" }}
-            />
-          </>
+          /* moving tray only, no base surface */
+          <div
+            ref={trayElRef}
+            className="pointer-events-none absolute rounded-md"
+            style={{ bottom: 32, left: "50%", transform: "translateX(-50%)", width: TRAY_W, height: 10, background: "#b8953a", boxShadow: "0 4px 16px rgba(0,0,0,0.5)" }}
+          />
         )}
 
         {/* bottle shadow */}
