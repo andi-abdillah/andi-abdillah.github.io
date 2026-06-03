@@ -18,6 +18,17 @@ const BOTTLES = [
 // ideal/window: power guidance
 // tolerance: rotation tolerance in degrees
 // bonus: score per land
+const WIND_STREAKS = [
+  { top: 11, width: 38, delay: 0,    dur: 1.5 },
+  { top: 24, width: 24, delay: 0.35, dur: 1.2 },
+  { top: 38, width: 52, delay: 0.7,  dur: 1.8 },
+  { top: 52, width: 30, delay: 0.15, dur: 1.35 },
+  { top: 65, width: 44, delay: 0.55, dur: 1.1 },
+  { top: 78, width: 20, delay: 0.85, dur: 1.6 },
+  { top: 18, width: 16, delay: 0.5,  dur: 1.0 },
+  { top: 58, width: 35, delay: 0.9,  dur: 1.4 },
+];
+
 const MODES = [
   { id:"default",      label:"Classic",     startX:0,    tableX:0,   tableW:160, ideal:50, window:25, tolerance:52, bonus:1 },
   { id:"table_throw",  label:"Table Throw", startX:-130, tableX:90,  tableW:110, ideal:45, window:18, tolerance:60, bonus:2 },
@@ -104,15 +115,6 @@ const BottleFlipGame = ({ onBack }) => {
     setPhase("idle");
   };
 
-  const resetStats = (e) => {
-    e.stopPropagation();
-    if (locked) return;
-    setScore(0); setAttempts(0); setStreak(0); setBest(0);
-    setResult(null);
-    setBottle({ x: mode.startX, y: 0, rot: 0 });
-    phaseRef.current = "idle";
-    setPhase("idle");
-  };
 
   const startCharge = () => {
     if (phaseRef.current === "charging" || phaseRef.current === "flipping") return;
@@ -146,13 +148,14 @@ const BottleFlipGame = ({ onBack }) => {
 
     x = m.startX; rot = 0;
 
+    const windForce = windOn ? (Math.random() > 0.5 ? 1 : -1) * 0.16 * (0.4 + p / 100) : 0;
+
     if (m.id === "table_throw" || m.id === "sliding_tray") {
-      vx        = 3 + (p / 100) * 8;
+      vx        = 3 + (p / 100) * 8 + windForce * 1.8;
       vy        = 4 + (p / 100) * 9;
       spinSpeed = (6 + p / 11) * bc.spin;
     } else {
-      const wind = windOn ? ((Math.random() > 0.5 ? 1 : -1) * 0.18 * (0.5 + p / 100)) : 0;
-      vx        = wind;
+      vx        = windForce;
       vy        = 5 + (p / 100) * 12;
       spinSpeed = (7.2 + p / 9) * bc.spin;
     }
@@ -251,48 +254,39 @@ const BottleFlipGame = ({ onBack }) => {
         <div><p className="text-xs uppercase text-white/35">Best</p><p className="font-futura text-2xl font-bold text-white">{best}</p></div>
       </div>
 
-      {/* Controls — all outside arena, all stopPropagation */}
+      {/* Controls */}
       <div className="mx-auto mb-3 flex max-w-2xl flex-col gap-2 px-2">
-        {/* Mode row — always full width so text never wraps due to sibling changes */}
-        <div className="flex gap-2">
+        {/* Mode row */}
+        <div className="flex gap-1.5">
           {MODES.map((m, i) => (
             <button
               key={m.id}
               onClick={(e) => changeMode(e, i)}
-              className="flex-1 rounded-2xl border px-2 py-2 text-xs font-bold uppercase"
+              className="flex-1 rounded-2xl border py-2 text-[10px] font-bold uppercase sm:text-xs"
               style={selStyle(i === modeIdx, "#ffcb05")}
             >
               {m.label}
             </button>
           ))}
         </div>
-        {/* Bottle + wind + reset */}
-        <div className="flex flex-wrap justify-center gap-2">
+        {/* Bottle + wind + reset — all in one row, small enough to fit mobile */}
+        <div className="flex justify-center gap-1.5">
           {BOTTLES.map((b, i) => (
             <button
               key={b.id}
               onClick={(e) => { e.stopPropagation(); if (!locked) setBottleIdx(i); }}
-              className="rounded-2xl border px-3 py-2 text-xs font-bold uppercase"
+              className="rounded-2xl border px-2.5 py-1.5 text-[10px] font-bold uppercase sm:px-3 sm:py-2 sm:text-xs"
               style={selStyle(i === bottleIdx, "#86efac")}
             >
               {b.label}
             </button>
           ))}
-          {mode.id === "default" && (
-            <button
-              onClick={(e) => { e.stopPropagation(); if (!locked) setWindOn(w => !w); }}
-              className="rounded-2xl border px-3 py-2 text-xs font-bold uppercase"
-              style={selStyle(windOn, "#93c5fd")}
-            >
-              Wind
-            </button>
-          )}
           <button
-            onClick={resetStats}
-            disabled={locked}
-            className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold uppercase text-white/55 transition hover:bg-white/10 disabled:opacity-45"
+            onClick={(e) => { e.stopPropagation(); if (!locked) setWindOn(w => !w); }}
+            className="rounded-2xl border px-2.5 py-1.5 text-[10px] font-bold uppercase sm:px-3 sm:py-2 sm:text-xs"
+            style={selStyle(windOn, "#93c5fd")}
           >
-            Reset
+            Wind
           </button>
         </div>
       </div>
@@ -313,6 +307,22 @@ const BottleFlipGame = ({ onBack }) => {
         onPointerLeave={release}
         onPointerCancel={release}
       >
+        {/* Wind streaks */}
+        {windOn && WIND_STREAKS.map((s, i) => (
+          <div
+            key={i}
+            className="pointer-events-none absolute rounded-full"
+            style={{
+              top:        `${s.top}%`,
+              left:       -64,
+              width:      s.width,
+              height:     2,
+              background: "rgba(147,197,253,0.45)",
+              animation:  `windStreak ${s.dur}s linear ${s.delay}s infinite`,
+            }}
+          />
+        ))}
+
         {/* horizon */}
         <div className="pointer-events-none absolute left-0 right-0 top-[46%] h-px bg-white/[0.05]" />
 
@@ -355,17 +365,20 @@ const BottleFlipGame = ({ onBack }) => {
         <Bottle config={bConfig} x={bottle.x} y={bottle.y} rot={bottle.rot} />
 
         {/* wind badge */}
-        {windOn && mode.id === "default" && (
-          <div className="pointer-events-none absolute right-4 top-3 flex items-center gap-1.5 rounded-full border border-blue-400/20 bg-black/30 px-3 py-1">
-            <span className="text-sm">💨</span>
-            <span className="font-futura text-[10px] uppercase text-blue-300">Wind</span>
+        {windOn && (
+          <div
+            className="pointer-events-none absolute right-4 top-3 flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-black/40 px-3 py-1"
+            style={{ animation: "windBadgeSway 2.2s ease-in-out infinite" }}
+          >
+            <span className="text-sm" style={{ display:"inline-block", animation:"windEmojiPush 1.1s ease-in-out infinite" }}>💨</span>
+            <span className="font-futura text-[10px] uppercase text-blue-300/90">Wind</span>
           </div>
         )}
 
         {/* result */}
         {result && phase === "result" && (
-          <div className="pointer-events-none absolute left-1/2 top-8 -translate-x-1/2 rounded-full bg-black/45 px-5 py-2 backdrop-blur-sm">
-            <p className="font-futura text-xl font-extrabold uppercase"
+          <div className="pointer-events-none absolute left-1/2 top-24 -translate-x-1/2 rounded-full bg-black/45 px-4 py-1.5 backdrop-blur-sm sm:top-8 sm:px-5 sm:py-2">
+            <p className="font-futura text-sm font-extrabold uppercase sm:text-xl"
               style={{ color: result.type === "land" ? "#22c55e" : "#f87171" }}>
               {result.text}
             </p>
@@ -373,21 +386,45 @@ const BottleFlipGame = ({ onBack }) => {
         )}
 
         {phase === "idle" && (
-          <p className="pointer-events-none absolute left-1/2 top-8 -translate-x-1/2 whitespace-nowrap font-futura text-sm uppercase text-white/50">
+          <p className="pointer-events-none absolute left-1/2 top-24 max-w-[200px] -translate-x-1/2 text-center font-futura text-xs uppercase text-white/50 sm:top-8 sm:max-w-none sm:whitespace-nowrap sm:text-sm">
             {HINTS[mode.id]}
           </p>
         )}
 
-        {/* power meter */}
-        <div className="pointer-events-none absolute bottom-5 left-5 h-32 w-3 overflow-hidden rounded-full bg-white/10">
+        {/* Mobile: info box top-left */}
+        <div className="pointer-events-none absolute left-3 top-3 sm:hidden" style={{ width: 128 }}>
+          <div className="rounded-xl border border-white/8 bg-black/45 px-2.5 py-2 backdrop-blur-sm">
+            <p className="text-[9px] uppercase text-white/35">{mode.label}</p>
+            {mode.id === "default" && (
+              <p className="font-futura text-xs font-bold text-white">{mode.ideal - mode.window}–{mode.ideal + mode.window}% power</p>
+            )}
+            {mode.id === "table_throw" && (
+              <p className="font-futura text-[10px] font-bold text-white/60">Aim for the table</p>
+            )}
+            {mode.id === "sliding_tray" && (
+              <p className="font-futura text-[10px] font-bold text-white/60">Hit the moving tray</p>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile: vertical power bar below info box */}
+        <div className="pointer-events-none absolute left-3 top-16 h-20 w-3 overflow-hidden rounded-full bg-white/10 sm:hidden">
           <div className="absolute bottom-0 w-full rounded-full" style={{
             height: `${power}%`,
             background: power > 72 ? "#ef4444" : power > 38 ? "#ffcb05" : "#22c55e",
           }} />
         </div>
 
-        {/* info box */}
-        <div className="pointer-events-none absolute bottom-4 right-4 rounded-2xl border border-white/8 bg-black/30 px-4 py-3 text-right backdrop-blur-sm">
+        {/* Desktop: vertical power bar bottom-left */}
+        <div className="pointer-events-none absolute bottom-5 left-5 hidden h-32 w-3 overflow-hidden rounded-full bg-white/10 sm:block">
+          <div className="absolute bottom-0 w-full rounded-full" style={{
+            height: `${power}%`,
+            background: power > 72 ? "#ef4444" : power > 38 ? "#ffcb05" : "#22c55e",
+          }} />
+        </div>
+
+        {/* Desktop: info box bottom-right */}
+        <div className="pointer-events-none absolute bottom-4 right-4 hidden rounded-2xl border border-white/8 bg-black/30 px-4 py-3 text-right backdrop-blur-sm sm:block">
           <p className="text-[10px] uppercase text-white/35">{mode.label}</p>
           {mode.id === "default" && (
             <>
@@ -405,6 +442,23 @@ const BottleFlipGame = ({ onBack }) => {
       </div>
 
       <p className="mt-3 text-center text-xs text-white/35">{TIPS[mode.id]}</p>
+
+      <style>{`
+        @keyframes windStreak {
+          0%   { transform: translateX(0);     opacity: 0   }
+          8%   { opacity: 0.55 }
+          85%  { opacity: 0.4  }
+          100% { transform: translateX(860px); opacity: 0   }
+        }
+        @keyframes windBadgeSway {
+          0%, 100% { transform: translateX(0px)  }
+          50%      { transform: translateX(3px)  }
+        }
+        @keyframes windEmojiPush {
+          0%, 100% { transform: translateX(0px) scaleX(1)    }
+          50%      { transform: translateX(2px) scaleX(1.15) }
+        }
+      `}</style>
     </div>
   );
 };

@@ -103,11 +103,11 @@ const Abilities = () => {
   ];
 
   const backendSkills = [
-    "PHP", "Laravel", "Node.js", "Express.js", "Hapi.js", "Sequelize ORM", "Prisma ORM", "MySQL",
+    "PHP", "Laravel", "Node.js", "Express.js", "Hapi.js", "Sequelize ORM", "Prisma ORM", "MySQL", "Jest (Unit Testing)",
   ];
 
   const devTools = [
-    "VSCode", "Git", "GitHub", "Atlassian (Jira)", "Google Cloud Platform", "RESTful API", "Jest", "Terminal",
+    "VSCode", "Git", "GitHub", "Atlassian (Jira)", "Google Cloud Platform", "RESTful API", "Terminal", "Adobe Photoshop",
   ];
 
   const otherSkills = ["Cloud Computing", "Scrum Methodology", "Agile Development"];
