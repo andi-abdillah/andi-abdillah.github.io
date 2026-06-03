@@ -103,14 +103,14 @@ const Abilities = () => {
   ];
 
   const backendSkills = [
-    "PHP", "Laravel", "Express.js", "Hapi.js", "Sequelize", "Prisma", "MySQL",
+    "PHP", "Laravel", "Node.js", "Express.js", "Hapi.js", "Sequelize ORM", "Prisma ORM", "MySQL",
   ];
 
   const devTools = [
-    "VSCode", "Git", "GitHub", "Atlassian (Jira)", "Google Cloud Platform", "Terminal",
+    "VSCode", "Git", "GitHub", "Atlassian (Jira)", "Google Cloud Platform", "RESTful API", "Jest", "Terminal",
   ];
 
-  const otherSkills = ["Cloud Computing", "Scrum"];
+  const otherSkills = ["Cloud Computing", "Scrum Methodology", "Agile Development"];
 
   const cards = [
     { title: "Frontend",  items: frontendSkills, icon: <TbBrandHtml5 />, gradient: "linear-gradient(160deg, #0f0c29, #302b63, #24243e)", textColor: "#ffffff" },

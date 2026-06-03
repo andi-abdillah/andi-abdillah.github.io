@@ -8,7 +8,7 @@ import Home from "./sections/Home";
 import Portfolio from "./sections/Portfolio";
 import Abilities from "./sections/Abilities";
 import Contact from "./sections/Contact";
-import Games from "./sections/CatchTheBug";
+import Games from "./sections/games";
 import Footer from "./sections/Footer";
 import Certificate from "./sections/Certificate";
 
