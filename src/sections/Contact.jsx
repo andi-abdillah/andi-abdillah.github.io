@@ -9,7 +9,7 @@ const GREETING = "Hai! Mau tahu apa tentang aku?";
 const SUGGESTIONS = [
   {
     q: "Biasanya ngerjain proyek apa aja?",
-    a: "Paling sering web app full-stack — company profile, sistem tiket, sampai ERP perusahaan. Andalannya Laravel sama React.",
+    a: "Paling sering web app full-stack: company profile, sistem tiket, sampai ERP perusahaan. Andalannya Laravel sama React.",
   },
   {
     q: "Apa sih yang bikin kamu beda?",
@@ -25,7 +25,7 @@ const SUGGESTIONS = [
   },
   {
     q: "🐛 Mau main game dulu?",
-    a: "Haha boleh! Ada mini game di bawah — coba tangkep bug sebanyak mungkin dalam 30 detik. Scroll aja ke bawah ya 👇",
+    a: "Haha boleh! Ada mini game di bawah, coba tangkep bug sebanyak mungkin dalam 30 detik. Scroll aja ke bawah ya 👇",
     scroll: true,
   },
 ];

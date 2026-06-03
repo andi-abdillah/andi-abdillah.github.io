@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 const SERVICES = [
   {
     num: "01", title: "Design & Development",
-    description: "Modern, fast-loading websites with clean UI and clean code — optimized for SEO and performance.",
+    description: "Modern, fast-loading websites with clean UI and clean code, optimized for SEO and performance.",
     gradient: "linear-gradient(160deg, #0d0a1e, #1a0a38)",
     textColor: "#fff",
     device: "ipad",
@@ -34,7 +34,7 @@ const SERVICES = [
   },
   {
     num: "02", title: "Mobile-First Design",
-    description: "Your website will look and function perfectly on all devices — responsive from the start.",
+    description: "Your website will look and function perfectly on all devices, responsive from the start.",
     gradient: "linear-gradient(160deg, #1e1b4b, #4338ca)",
     textColor: "#fff",
     device: "iphone",
@@ -111,7 +111,7 @@ const SERVICES = [
   },
   {
     num: "05", title: "Laravel Back-End",
-    description: "Powerful, secure APIs and backend logic using Laravel — perfect for dashboards and data apps.",
+    description: "Powerful, secure APIs and backend logic using Laravel, perfect for dashboards and data apps.",
     gradient: "linear-gradient(160deg, #1a0505, #2d0808)",
     textColor: "#fff",
     device: "server",

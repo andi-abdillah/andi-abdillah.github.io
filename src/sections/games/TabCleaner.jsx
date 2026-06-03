@@ -3,17 +3,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const GAME_DURATION = 45;
 
 const GOOD_TABS = [
-  { emoji: "📧", label: "Email — Job Interview Confirmation" },
-  { emoji: "🏦", label: "Bank — Transfer Confirmation" },
-  { emoji: "📦", label: "Track My Package — Day 3" },
-  { emoji: "🏥", label: "Doctor Appointment — Thu 2pm" },
-  { emoji: "✈️", label: "Flight Booking — Step 2 of 3" },
+  { emoji: "📧", label: "Email: Job Interview Confirmation" },
+  { emoji: "🏦", label: "Bank Transfer Confirmation" },
+  { emoji: "📦", label: "Track My Package, Day 3" },
+  { emoji: "🏥", label: "Doctor Appointment, Thu 2pm" },
+  { emoji: "✈️", label: "Flight Booking, Step 2 of 3" },
   { emoji: "🧾", label: "Monthly Electricity Bill" },
-  { emoji: "🎓", label: "Online Course — Chapter 4" },
-  { emoji: "🛒", label: "Shopping Cart — 3 items" },
+  { emoji: "🎓", label: "Online Course, Chapter 4" },
+  { emoji: "🛒", label: "Shopping Cart, 3 items" },
   { emoji: "📱", label: "Compare Smartphones" },
-  { emoji: "🏠", label: "Apartment Listings — 2BR" },
-  { emoji: "🗺️", label: "Google Maps — Route to Home" },
+  { emoji: "🏠", label: "Apartment Listings, 2BR" },
+  { emoji: "🗺️", label: "Google Maps: Route to Home" },
   { emoji: "📝", label: "Birthday Party Guest List" },
 ];
 
@@ -22,9 +22,9 @@ const BAD_TABS = [
   { emoji: "🦠", label: "Your PC has 47 viruses" },
   { emoji: "📹", label: "Cat fails compilation #318" },
   { emoji: "🔔", label: "Allow Notifications? ALLOW?" },
-  { emoji: "💊", label: "Cheap meds — no prescription!" },
+  { emoji: "💊", label: "Cheap meds, no prescription!" },
   { emoji: "👻", label: "You've been selected!" },
-  { emoji: "💰", label: "Make $500/day — GUARANTEED" },
+  { emoji: "💰", label: "Make $500/day GUARANTEED" },
   { emoji: "🏆", label: "You are visitor #1,000,000!" },
   { emoji: "🎁", label: "Claim your FREE gift now!" },
   { emoji: "📢", label: "Your account expires TODAY!" },
@@ -32,8 +32,8 @@ const BAD_TABS = [
   { emoji: "😍", label: "Hot singles in your area" },
   { emoji: "🔄", label: "This page is reloading... (47×)" },
   { emoji: "🎬", label: "Just one more YouTube video..." },
-  { emoji: "🍕", label: "Pizza deals — Sponsored Ad #47" },
-  { emoji: "🎲", label: "Online Casino — 500% BONUS" },
+  { emoji: "🍕", label: "Pizza deals, Sponsored Ad #47" },
+  { emoji: "🎲", label: "Online Casino, 500% BONUS" },
   { emoji: "📲", label: "Download this app, earn money!" },
 ];
 
@@ -79,6 +79,9 @@ const TabCleanerGame = ({ onBack }) => {
   const spawnRef      = useRef(null);
   const timeLeftRef   = useRef(GAME_DURATION);
   const gameActiveRef = useRef(false);
+  const tabsRef       = useRef([]);
+
+  useEffect(() => { tabsRef.current = tabs; }, [tabs]);
 
   const spawnTab = useCallback(() => {
     if (!areaRef.current || !gameActiveRef.current) return;
@@ -90,13 +93,34 @@ const TabCleanerGame = ({ onBack }) => {
     const phase = getPhase(timeLeftRef.current);
     const TAB_W = Math.min(200, Math.floor(width * 0.58));
     const TAB_H = 56;
+    const GAP   = 8;
+
+    const maxX = Math.max(10, width  - TAB_W - 8);
+    const maxY = Math.max(10, height - TAB_H - 8);
+
+    let x = Math.random() * maxX + 4;
+    let y = Math.random() * maxY + 4;
+
+    for (let i = 0; i < 12; i++) {
+      const candidate = { x, y };
+      const overlaps = tabsRef.current.some(
+        (t) =>
+          candidate.x < t.x + t.w + GAP &&
+          candidate.x + TAB_W + GAP > t.x &&
+          candidate.y < t.y + TAB_H + GAP &&
+          candidate.y + TAB_H + GAP > t.y,
+      );
+      if (!overlaps) break;
+      x = Math.random() * maxX + 4;
+      y = Math.random() * maxY + 4;
+    }
 
     const tab = {
       id,
       ...tmpl,
       type:     isBad ? "bad" : "good",
-      x:        Math.random() * Math.max(10, width  - TAB_W - 8) + 4,
-      y:        Math.random() * Math.max(10, height - TAB_H - 8) + 4,
+      x,
+      y,
       lifespan: phase.lifespan,
       w:        TAB_W,
     };
@@ -236,7 +260,7 @@ const TabCleanerGame = ({ onBack }) => {
           >
             <span>🔒</span>
             <span className="truncate">
-              my-browser.local —{" "}
+              my-browser.local ·{" "}
               {gameState === "playing"
                 ? `${tabs.length} tab${tabs.length !== 1 ? "s" : ""} open`
                 : "ready"}
@@ -317,7 +341,7 @@ const TabCleanerGame = ({ onBack }) => {
                 Close the spam tabs!
               </p>
 
-              {/* Legend — 2-col grid, each col gets exactly half */}
+              {/* Legend:2-col grid, each col gets exactly half */}
               <div className="grid w-full max-w-xs grid-cols-2 gap-2">
                 <div className="flex flex-col gap-1.5">
                   <p className="text-center text-[10px] font-bold uppercase text-red-400">

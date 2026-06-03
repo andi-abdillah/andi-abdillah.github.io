@@ -9,7 +9,7 @@ const GAME_LIST = [
   { id:"bug",    emoji:"🐛", title:"Catch the Bug",    desc:"Tap bugs before they escape. 30 sec, how many can you catch?" },
   { id:"memory", emoji:"🗂️", title:"Sort It Out",      desc:"Drag each device into the right category before time runs out!" },
   { id:"code",   emoji:"💡", title:"Tech Trivia",      desc:"Answer quick questions about everyday tech. How much do you know?" },
-  { id:"tabs",   emoji:"🧹", title:"Tab Cleaner",      desc:"Close the spam tabs before they escape — but don't touch the good ones!" },
+  { id:"tabs",   emoji:"🧹", title:"Tab Cleaner",      desc:"Close the spam tabs before they escape. Don't touch the good ones!" },
 ];
 
 const Games = () => {
