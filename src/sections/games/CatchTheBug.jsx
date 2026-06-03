@@ -216,14 +216,24 @@ const CatchTheBugGame = ({ onBack }) => {
                 style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(4px)" }}
               >
                 <p className="text-5xl">🏁</p>
-                <p className="font-futura text-4xl font-extrabold text-white">{score} pts</p>
+                <p className="font-futura text-4xl font-extrabold text-white">{caught} bugs</p>
+                <p className="font-futura text-sm text-white/40">{score} pts total</p>
                 <p className="font-futura text-base font-bold uppercase" style={{ color }}>
                   {label}
                 </p>
-                <div className="mt-1 flex gap-5 text-sm text-white/55">
-                  <span>🎯 {caught} caught</span>
-                  <span>💨 {missed} missed</span>
-                  <span>📊 {accuracy}% accuracy</span>
+                <div className="mt-1 grid w-48 grid-cols-3 text-center">
+                  <div>
+                    <p className="font-futura text-base font-bold text-white">{caught}</p>
+                    <p className="text-[10px] text-white/40">caught</p>
+                  </div>
+                  <div>
+                    <p className="font-futura text-base font-bold text-white">{missed}</p>
+                    <p className="text-[10px] text-white/40">missed</p>
+                  </div>
+                  <div>
+                    <p className="font-futura text-base font-bold text-white">{accuracy}%</p>
+                    <p className="text-[10px] text-white/40">accuracy</p>
+                  </div>
                 </div>
                 <button
                   onClick={startGame}
