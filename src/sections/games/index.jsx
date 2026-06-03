@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CatchTheBugGame from "./CatchTheBug";
-import SortItOutGame   from "./MemoryCard";
-import TechTriviaGame  from "./CodeBreaker";
+import SortItOutGame   from "./SortItOut";
+import TechTriviaGame  from "./TechTrivia";
 import BottleFlipGame  from "./BottleFlip";
 import TabCleanerGame  from "./TabCleaner";
 const GAME_LIST = [
