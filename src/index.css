@@ -126,6 +126,13 @@
   50%      { transform: translateX(2px) scaleX(1.15) }
 }
 
+@keyframes gameLoadBar {
+  0%   { width: 5%;  opacity: 1; }
+  80%  { width: 92%; opacity: 1; }
+  95%  { width: 92%; opacity: 0.3; }
+  100% { width: 5%;  opacity: 0; }
+}
+
 /* ── Contact chat ── */
 @keyframes chatbounce { 0%,60%,100% { transform:translateY(0); opacity:.5 } 30% { transform:translateY(-4px); opacity:1 } }
 .chat-scroll { scrollbar-width:none; -ms-overflow-style:none }

@@ -1,4 +1,5 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useRef, useEffect } from "react";
+import { GameLoadingScreen } from "./ui";
 
 const CatchTheBugGame = lazy(() => import("./CatchTheBug"));
 const SortItOutGame   = lazy(() => import("./SortItOut"));
@@ -14,8 +15,23 @@ const GAME_LIST = [
   { id:"tabs",   emoji:"🧹", title:"Tab Cleaner",      desc:"Close the spam tabs before they escape. Don't touch the good ones!" },
 ];
 
+const MIN_LOAD_MS = 1000;
+
 const Games = () => {
   const [activeGame, setActiveGame] = useState(null);
+  const [loading, setLoading]       = useState(false);
+  const timerRef = useRef(null);
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  const selectGame = (id) => {
+    clearTimeout(timerRef.current);
+    setActiveGame(id);
+    setLoading(true);
+    timerRef.current = setTimeout(() => setLoading(false), MIN_LOAD_MS);
+  };
+
+  const activeGameData = GAME_LIST.find(g => g.id === activeGame);
 
   return (
     <section id="catch-the-bug" className="bg-[#0d0d0d] px-8 py-24">
@@ -25,7 +41,7 @@ const Games = () => {
       {!activeGame && (
         <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-5">
           {GAME_LIST.map(g=>(
-            <button key={g.id} onClick={()=>setActiveGame(g.id)}
+            <button key={g.id} onClick={()=>selectGame(g.id)}
               className="group flex w-full flex-col items-center gap-4 rounded-3xl p-8 text-center transition-all duration-300 hover:-translate-y-2 sm:w-72 lg:w-80"
               style={{background:"linear-gradient(160deg,#1a1a2e,#16213e)",border:"3px solid rgba(255,255,255,0.06)",boxShadow:"0 10px 40px rgba(0,0,0,0.3)"}}>
               <span className="text-6xl transition-transform duration-300 group-hover:scale-110">{g.emoji}</span>
@@ -40,12 +56,15 @@ const Games = () => {
       )}
 
       <div className="mx-auto max-w-3xl">
-        <Suspense fallback={null}>
-          {activeGame==="bug"    && <CatchTheBugGame onBack={()=>setActiveGame(null)} />}
-          {activeGame==="memory" && <SortItOutGame   onBack={()=>setActiveGame(null)} />}
-          {activeGame==="code"   && <TechTriviaGame  onBack={()=>setActiveGame(null)} />}
-          {activeGame==="bottle" && <BottleFlipGame  onBack={()=>setActiveGame(null)} />}
-          {activeGame==="tabs"   && <TabCleanerGame  onBack={()=>setActiveGame(null)} />}
+        {loading && activeGameData && (
+          <GameLoadingScreen emoji={activeGameData.emoji} />
+        )}
+        <Suspense fallback={activeGameData ? <GameLoadingScreen emoji={activeGameData.emoji} /> : null}>
+          {!loading && activeGame==="bug"    && <CatchTheBugGame onBack={()=>{ setActiveGame(null); setLoading(false); }} />}
+          {!loading && activeGame==="memory" && <SortItOutGame   onBack={()=>{ setActiveGame(null); setLoading(false); }} />}
+          {!loading && activeGame==="code"   && <TechTriviaGame  onBack={()=>{ setActiveGame(null); setLoading(false); }} />}
+          {!loading && activeGame==="bottle" && <BottleFlipGame  onBack={()=>{ setActiveGame(null); setLoading(false); }} />}
+          {!loading && activeGame==="tabs"   && <TabCleanerGame  onBack={()=>{ setActiveGame(null); setLoading(false); }} />}
         </Suspense>
       </div>
     </section>

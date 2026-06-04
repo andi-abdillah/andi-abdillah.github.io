@@ -1,5 +1,26 @@
 // Shared UI for the mini games — keeps markup identical across every game.
 
+export const GameLoadingScreen = ({ emoji }) => (
+  <div
+    className="relative mx-auto flex select-none flex-col items-center justify-center overflow-hidden rounded-3xl"
+    style={{
+      maxWidth: 700,
+      height: "clamp(280px, 55vh, 370px)",
+      background: "linear-gradient(180deg,#1a1a2e 0%,#16213e 45%,#13231c 46%,#0d1a12 100%)",
+      border: "3px solid rgba(255,255,255,0.06)",
+    }}
+  >
+    <span className="mb-4 animate-pulse text-6xl">{emoji}</span>
+    <p className="mb-6 font-futura text-sm font-bold uppercase tracking-widest text-white/50">Loading</p>
+    <div className="w-48 overflow-hidden rounded-full bg-white/10" style={{ height: 4 }}>
+      <div
+        className="h-full rounded-full bg-[#ffcb05]"
+        style={{ animation: "gameLoadBar 1.1s ease-in-out infinite" }}
+      />
+    </div>
+  </div>
+);
+
 export const BackButton = ({ onClick, className = "mb-6" }) => (
   <button
     onClick={onClick}
