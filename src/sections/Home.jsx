@@ -12,6 +12,42 @@ const CARDS = [
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
+const TITLE_WORDS = ["Amin", "Abdillah"];
+const TITLE_BASE_DELAY = 0.28;
+const TITLE_LETTER_DELAY = 0.045;
+const ROLE_REVEAL_DELAY = TITLE_BASE_DELAY;
+const META_REVEAL_DELAY =
+  TITLE_BASE_DELAY + Math.max(TITLE_WORDS.join("").length, "WebDeveloper".length) * TITLE_LETTER_DELAY + 0.28;
+
+const RevealCharacters = ({ text, mounted, baseDelay, letterDelay = TITLE_LETTER_DELAY }) => {
+  let characterIndex = 0;
+
+  return text.split("").map((character, index) => {
+    if (character === " ") {
+      return <span key={`${character}-${index}`} className="inline-block w-[0.3em]" />;
+    }
+
+    const delay = baseDelay + characterIndex * letterDelay;
+    characterIndex += 1;
+
+    return (
+      <span
+        key={`${character}-${index}`}
+        className="inline-block will-change-transform"
+        style={{
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? "translateY(0)" : "translateY(115%)",
+          transition: mounted
+            ? `transform 0.82s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, opacity 0.45s ease ${delay}s`
+            : "none",
+        }}
+      >
+        {character}
+      </span>
+    );
+  });
+};
+
 const Home = () => {
   const [mounted, setMounted] = useState(false);
   const [cardsInView, setCardsInView] = useState(false);
@@ -80,9 +116,17 @@ const Home = () => {
 {/* TOP + Name — rapat */}
       <div
         className="relative z-10 flex flex-col items-center gap-6 md:gap-3"
-        style={{ opacity: mounted ? 1 : 0, transition: "opacity 1.2s ease 0.25s" }}
       >
-        <div className="flex flex-col items-center gap-1">
+        <div
+          className="flex flex-col items-center gap-1"
+          style={{
+            opacity: mounted ? 1 : 0,
+            transform: mounted ? "translateY(0)" : "translateY(0.75rem)",
+            transition: mounted
+              ? `opacity 0.45s ease ${META_REVEAL_DELAY}s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) ${META_REVEAL_DELAY}s`
+              : "none",
+          }}
+        >
           <p className="font-futura text-sm font-bold uppercase tracking-[0.09em] text-white">
             Gresik, East Java, Indonesia
           </p>
@@ -93,26 +137,28 @@ const Home = () => {
 
         {/* Name */}
         <h1
+          aria-label="Amin Abdillah"
           className="font-futura font-extrabold uppercase text-white"
-          style={{ fontSize: "clamp(3.125rem, 10vw, 85px)", letterSpacing: "-0.02em", lineHeight: 0.82 }}
+          style={{ fontSize: "clamp(3.125rem, 10vw, 85px)", letterSpacing: "-0.02em", lineHeight: 0.92 }}
         >
-          {["Amin", "Abdillah"].map((word, i) => (
-            <span key={i} className="block sm:inline-block">
-              {i > 0 && <span className="hidden sm:inline-block sm:w-[0.3ch]" />}
-              <span
-                className="inline-block"
-                style={{
-                  transformOrigin: "bottom",
-                  transform: mounted ? "scaleY(1) translateY(0)" : "scaleY(0) translateY(0.25ch)",
-                  transition: mounted
-                    ? `transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 0.1}s`
-                    : "none",
-                }}
-              >
-                {word}
+          <span aria-hidden="true" className="block sm:hidden">
+            {TITLE_WORDS.map((word, i) => (
+              <span key={word} className="block overflow-hidden pb-[0.1em] leading-[1.02]">
+                <span className="inline-flex items-baseline whitespace-nowrap">
+                  <RevealCharacters
+                    text={word}
+                    mounted={mounted}
+                    baseDelay={TITLE_BASE_DELAY + TITLE_WORDS.slice(0, i).join("").length * TITLE_LETTER_DELAY}
+                  />
+                </span>
               </span>
+            ))}
+          </span>
+          <span aria-hidden="true" className="hidden overflow-hidden pb-[0.1em] leading-[1.02] sm:inline-block">
+            <span className="inline-flex items-baseline whitespace-nowrap">
+              <RevealCharacters text="Amin Abdillah" mounted={mounted} baseDelay={TITLE_BASE_DELAY} />
             </span>
-          ))}
+          </span>
         </h1>
 
       </div>
@@ -182,20 +228,35 @@ const Home = () => {
       {/* BOT */}
       <div
         className="mt-12 flex flex-col items-center gap-1 lg:mt-6"
-        style={{ opacity: mounted ? 1 : 0, transition: "opacity 1.2s ease 0.25s" }}
       >
         <p
+          aria-label="Web Developer"
           className="font-futura font-extrabold uppercase"
-          style={{ color: "rgba(255,255,255,0.25)", fontSize: "clamp(2rem, 12vw, 130px)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
+          style={{ color: "rgba(255,255,255,0.25)", fontSize: "clamp(2rem, 12vw, 130px)", letterSpacing: "-0.02em", lineHeight: 0.96 }}
         >
-          Web Developer
+          <span aria-hidden="true" className="inline-block overflow-hidden pb-[0.1em] leading-[1.02]">
+            <span className="inline-flex items-baseline whitespace-nowrap">
+              <RevealCharacters text="Web Developer" mounted={mounted} baseDelay={ROLE_REVEAL_DELAY} />
+            </span>
+          </span>
         </p>
-        <p className="mt-2 font-futura text-sm font-bold uppercase tracking-[0.09em] text-white">
-          Technologies Include
-        </p>
-        <p className="font-futura text-xs uppercase tracking-[0.09em] text-white/60">
-          Laravel, Next.js, React.js, Tailwind CSS, TypeScript
-        </p>
+        <div
+          className="mt-2 flex flex-col items-center gap-1"
+          style={{
+            opacity: mounted ? 1 : 0,
+            transform: mounted ? "translateY(0)" : "translateY(0.75rem)",
+            transition: mounted
+              ? `opacity 0.45s ease ${META_REVEAL_DELAY}s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) ${META_REVEAL_DELAY}s`
+              : "none",
+          }}
+        >
+          <p className="font-futura text-sm font-bold uppercase tracking-[0.09em] text-white">
+            Technologies Include
+          </p>
+          <p className="font-futura text-xs uppercase tracking-[0.09em] text-white/60">
+            Laravel, Next.js, React.js, Tailwind CSS, TypeScript
+          </p>
+        </div>
 
       </div>
     </section>
