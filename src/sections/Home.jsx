@@ -72,9 +72,18 @@ const Home = () => {
       if (cardsRef.current) cardsRectRef.current = cardsRef.current.getBoundingClientRect();
     };
     update();
+    // Re-measure after the font-swap re-render paints, so the cached rect isn't
+    // stale (a stale 0-size rect would make the mouse-tilt normalize to Infinity
+    // and the parallax would silently stop working).
+    const raf = requestAnimationFrame(update);
     window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update);
+    };
+  }, [mounted]);
 
   return (
     <section
@@ -127,7 +136,7 @@ const Home = () => {
         className="relative z-10 mt-14 flex flex-wrap justify-center md:flex-nowrap"
         onMouseMove={(e) => {
           const rect = cardsRectRef.current;
-          if (!rect) return;
+          if (!rect || !rect.width || !rect.height) return;
           mousePosRef.current = {
             x: (e.clientX - rect.left) / rect.width  * 2 - 1,
             y: (e.clientY - rect.top)  / rect.height * 2 - 1,
@@ -189,7 +198,9 @@ const Home = () => {
         className="mt-12 flex flex-col items-center gap-1 lg:mt-6"
         style={{ opacity: mounted ? 1 : 0, transition: mounted ? "opacity 1.2s ease" : "none" }}
       >
+        <span className="sr-only">Web Developer</span>
         <p
+          aria-hidden="true"
           className="font-futura font-extrabold uppercase"
           style={{ color: "rgba(255,255,255,0.25)", fontSize: "clamp(2rem, 12vw, 130px)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
         >
