@@ -6,7 +6,7 @@ export const GameLoadingScreen = ({ emoji }) => (
     style={{
       maxWidth: 700,
       height: "clamp(280px, 55vh, 370px)",
-      background: "linear-gradient(180deg,#1a1a2e 0%,#16213e 45%,#13231c 46%,#0d1a12 100%)",
+      background: "linear-gradient(160deg,#1a1a2e,#16213e)",
       border: "3px solid rgba(255,255,255,0.06)",
     }}
   >

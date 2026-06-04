@@ -56,9 +56,7 @@ const Games = () => {
       )}
 
       <div className="mx-auto max-w-3xl">
-        {loading && activeGameData && (
-          <GameLoadingScreen emoji={activeGameData.emoji} />
-        )}
+        {loading && activeGameData && <GameLoadingScreen emoji={activeGameData.emoji} />}
         <Suspense fallback={activeGameData ? <GameLoadingScreen emoji={activeGameData.emoji} /> : null}>
           {!loading && activeGame==="bug"    && <CatchTheBugGame onBack={()=>{ setActiveGame(null); setLoading(false); }} />}
           {!loading && activeGame==="memory" && <SortItOutGame   onBack={()=>{ setActiveGame(null); setLoading(false); }} />}
