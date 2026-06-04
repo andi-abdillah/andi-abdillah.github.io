@@ -41,9 +41,18 @@ const Home = () => {
   ).current;
 
   useEffect(() => {
-    const t = setTimeout(() => setMounted(true), 100);
-    return () => clearTimeout(t);
-  }, []);
+    // Wait for fonts to load before showing any text.
+    // This prevents font-swap CLS: containers become visible only after FuturaNow
+    // and Inter are fully loaded, so there is no fallback→loaded reflow.
+    if (reducedMotion) { setMounted(true); return; }
+    let triggered = false;
+    const trigger = () => { if (!triggered) { triggered = true; setMounted(true); } };
+    if (typeof document !== "undefined" && document.fonts?.ready) {
+      document.fonts.ready.then(trigger);
+    }
+    const t = setTimeout(trigger, 700); // fallback if fonts.ready stalls
+    return () => { triggered = true; clearTimeout(t); };
+  }, [reducedMotion]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -139,7 +148,10 @@ const Home = () => {
       className="relative flex flex-col items-center overflow-hidden bg-primary px-8 pb-16 pt-16 text-center sm:pt-10 md:pt-8"
     >
       {/* TOP + Name — rapat */}
-      <div className="relative z-10 flex flex-col items-center gap-6 md:gap-3">
+      <div
+        className="relative z-10 flex flex-col items-center gap-6 md:gap-3"
+        style={{ opacity: mounted ? 1 : 0, transition: mounted ? "opacity 0.8s ease" : "none" }}
+      >
         {/* Location & email: invisible (opacity 0) until reveal completes.
             They keep their layout space so the hero doesn't shift on reveal. */}
         <div className="flex flex-col items-center gap-1" style={metaStyle()}>
@@ -232,7 +244,10 @@ const Home = () => {
       </div>
 
       {/* BOT */}
-      <div className="mt-12 flex flex-col items-center gap-1 lg:mt-6">
+      <div
+        className="mt-12 flex flex-col items-center gap-1 lg:mt-6"
+        style={{ opacity: mounted ? 1 : 0, transition: mounted ? "opacity 0.8s ease" : "none" }}
+      >
         {/* "Web Developer" — same masked reveal timing as "Amin Abdillah" */}
         {/* "Web" chars: global indices 0-2; "Developer" chars: global indices 3-11 */}
         <p
