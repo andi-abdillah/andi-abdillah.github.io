@@ -2,29 +2,88 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Amin Abdillah | Web Developer</title>
 
     <link rel="canonical" href="https://www.aminabdillah.com/" />
 
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#741ce8" />
+
     <!-- SEO -->
     <meta name="description" content="Amin Abdillah is a full-stack web developer from Gresik, East Java, specializing in Laravel, React, Next.js, and TypeScript." />
     <meta name="author" content="Amin Abdillah" />
     <meta name="keywords" content="Amin Abdillah, web developer, Laravel, React, Next.js, TypeScript, full-stack, Gresik, Indonesia" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.aminabdillah.com/" />
+    <meta property="og:site_name" content="Amin Abdillah" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Amin Abdillah | Web Developer" />
     <meta property="og:description" content="Full-stack web developer from Gresik, East Java. I build clean, fast, and enjoyable web apps." />
     <meta property="og:image" content="https://www.aminabdillah.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Amin Abdillah, Web Developer" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Amin Abdillah | Web Developer" />
     <meta name="twitter:description" content="Full-stack web developer from Gresik, East Java. I build clean, fast, and enjoyable web apps." />
     <meta name="twitter:image" content="https://www.aminabdillah.com/og-image.png" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://www.aminabdillah.com/#person",
+          "name": "Amin Abdillah",
+          "url": "https://www.aminabdillah.com/",
+          "image": "https://www.aminabdillah.com/og-image.png",
+          "jobTitle": "Web Developer",
+          "email": "aminabdillah.id@gmail.com",
+          "description": "Full-stack web developer from Gresik, East Java, specializing in Laravel, React, Next.js, and TypeScript.",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Gresik",
+            "addressRegion": "East Java",
+            "addressCountry": "ID"
+          },
+          "knowsAbout": ["Laravel", "Next.js", "React", "TypeScript", "Tailwind CSS", "Full-stack Web Development"],
+          "sameAs": [
+            "https://www.linkedin.com/in/amin-abdillah-099225208/",
+            "https://github.com/andi-abdillah"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.aminabdillah.com/#website",
+          "url": "https://www.aminabdillah.com/",
+          "name": "Amin Abdillah | Web Developer",
+          "description": "Portfolio of Amin Abdillah, a full-stack web developer from Gresik, East Java.",
+          "publisher": { "@id": "https://www.aminabdillah.com/#person" },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "https://www.aminabdillah.com/#profilepage",
+          "url": "https://www.aminabdillah.com/",
+          "name": "Amin Abdillah | Web Developer",
+          "isPartOf": { "@id": "https://www.aminabdillah.com/#website" },
+          "about": { "@id": "https://www.aminabdillah.com/#person" },
+          "inLanguage": "en"
+        }
+      ]
+    }
+    </script>
 
     <!-- FuturaNow preload -->
     <link rel="preload" href="/fonts/FuturaNowHeadline-CnXBd.woff2" as="font" type="font/woff2" crossorigin="anonymous" />

@@ -1,0 +1,16 @@
+{
+  "name": "Amin Abdillah | Web Developer",
+  "short_name": "Amin Abdillah",
+  "description": "Full-stack web developer from Gresik, East Java. I build clean, fast, and enjoyable web apps.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#741ce8",
+  "theme_color": "#741ce8",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "256x256",
+      "type": "image/x-icon"
+    }
+  ]
+}
