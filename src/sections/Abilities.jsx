@@ -121,9 +121,9 @@ const Abilities = () => {
 
   return (
     <section id="abilities" ref={sectionRef} className="bg-primary px-10 py-24">
-      <h1 className="mb-16 text-center font-futura text-5xl font-extrabold uppercase leading-tight text-white">
+      <h2 className="mb-16 text-center font-futura text-5xl font-extrabold uppercase leading-tight text-white">
         Expertise
-      </h1>
+      </h2>
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((card, index) => (
           <div key={index} className="mx-auto w-full max-w-[230px] lg:max-w-none">

@@ -22,6 +22,7 @@ const Home = () => {
   const mousePosRef  = useRef({ x: 0, y: 0 });
   const currentTiltX = useRef(0);
   const currentTiltY = useRef(0);
+  const cardsRectRef = useRef(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 100);
@@ -60,6 +61,15 @@ const Home = () => {
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
   }, [animate]);
+
+  useEffect(() => {
+    const update = () => {
+      if (cardsRef.current) cardsRectRef.current = cardsRef.current.getBoundingClientRect();
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   return (
     <section
@@ -111,8 +121,8 @@ const Home = () => {
         ref={cardsRef}
         className="relative z-10 mt-14 flex flex-wrap justify-center md:flex-nowrap"
         onMouseMove={(e) => {
-          if (!cardsRef.current) return;
-          const rect = cardsRef.current.getBoundingClientRect();
+          const rect = cardsRectRef.current;
+          if (!rect) return;
           mousePosRef.current = {
             x: (e.clientX - rect.left) / rect.width  * 2 - 1,
             y: (e.clientY - rect.top)  / rect.height * 2 - 1,

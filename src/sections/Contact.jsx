@@ -131,9 +131,9 @@ const Contact = () => {
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 lg:grid-cols-3">
         {/* Left */}
         <div className="lg:col-span-1">
-          <h1 className="font-futura text-5xl font-extrabold uppercase leading-tight text-white">
+          <h2 className="font-futura text-5xl font-extrabold uppercase leading-tight text-white">
             Get in touch
-          </h1>
+          </h2>
           <p className="mt-4 max-w-xs text-white/60">
             Have a project in mind or want to discuss an opportunity? Feel free to reach out.
           </p>

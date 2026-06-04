@@ -1,9 +1,11 @@
-import { useState } from "react";
-import CatchTheBugGame from "./CatchTheBug";
-import SortItOutGame   from "./SortItOut";
-import TechTriviaGame  from "./TechTrivia";
-import BottleFlipGame  from "./BottleFlip";
-import TabCleanerGame  from "./TabCleaner";
+import { lazy, Suspense, useState } from "react";
+
+const CatchTheBugGame = lazy(() => import("./CatchTheBug"));
+const SortItOutGame   = lazy(() => import("./SortItOut"));
+const TechTriviaGame  = lazy(() => import("./TechTrivia"));
+const BottleFlipGame  = lazy(() => import("./BottleFlip"));
+const TabCleanerGame  = lazy(() => import("./TabCleaner"));
+
 const GAME_LIST = [
   { id:"bottle", emoji:"🍾", title:"Bottle Flip",      desc:"Pick a bottle, choose a target, then land through wind and tilt." },
   { id:"bug",    emoji:"🐛", title:"Catch the Bug",    desc:"Tap bugs before they escape. 30 sec, how many can you catch?" },
@@ -17,7 +19,7 @@ const Games = () => {
 
   return (
     <section id="catch-the-bug" className="bg-[#0d0d0d] px-8 py-24">
-      <h1 className="mb-2 text-center font-futura text-5xl font-extrabold uppercase text-white">Mini Games</h1>
+      <h2 className="mb-2 text-center font-futura text-5xl font-extrabold uppercase text-white">Mini Games</h2>
       <p className="mb-12 text-center text-sm text-white/40">Take a break, pick a game</p>
 
       {!activeGame && (
@@ -38,11 +40,13 @@ const Games = () => {
       )}
 
       <div className="mx-auto max-w-3xl">
-        {activeGame==="bug"    && <CatchTheBugGame onBack={()=>setActiveGame(null)} />}
-        {activeGame==="memory" && <SortItOutGame   onBack={()=>setActiveGame(null)} />}
-        {activeGame==="code"   && <TechTriviaGame  onBack={()=>setActiveGame(null)} />}
-        {activeGame==="bottle" && <BottleFlipGame  onBack={()=>setActiveGame(null)} />}
-        {activeGame==="tabs"   && <TabCleanerGame  onBack={()=>setActiveGame(null)} />}
+        <Suspense fallback={null}>
+          {activeGame==="bug"    && <CatchTheBugGame onBack={()=>setActiveGame(null)} />}
+          {activeGame==="memory" && <SortItOutGame   onBack={()=>setActiveGame(null)} />}
+          {activeGame==="code"   && <TechTriviaGame  onBack={()=>setActiveGame(null)} />}
+          {activeGame==="bottle" && <BottleFlipGame  onBack={()=>setActiveGame(null)} />}
+          {activeGame==="tabs"   && <TabCleanerGame  onBack={()=>setActiveGame(null)} />}
+        </Suspense>
       </div>
     </section>
   );

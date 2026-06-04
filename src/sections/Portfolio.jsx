@@ -98,9 +98,9 @@ const Portfolio = () => {
 
   return (
     <section id="portfolio" className="mx-auto max-w-screen-2xl px-8 py-24">
-      <h1 className="mb-16 text-center font-futura text-5xl font-extrabold uppercase leading-tight [color:#363636]">
+      <h2 className="mb-16 text-center font-futura text-5xl font-extrabold uppercase leading-tight [color:#363636]">
         A Lovely Selection of Work
-      </h1>
+      </h2>
       <div className="flex flex-col space-y-24">
         {Data.map((item) => (
           <ProjectItem

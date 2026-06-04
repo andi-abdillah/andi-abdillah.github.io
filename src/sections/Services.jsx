@@ -259,9 +259,9 @@ const Services = () => {
   return (
     <section id="services" ref={sectionRef} className="bg-primary px-8 py-24">
       <style>{shimmerStyle}</style>
-      <h1 className="mb-16 text-center font-futura text-5xl font-extrabold uppercase leading-tight text-white">
+      <h2 className="mb-16 text-center font-futura text-5xl font-extrabold uppercase leading-tight text-white">
         What I Offer
-      </h1>
+      </h2>
       {/* Row 1 — full width */}
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-6">
         {SERVICES.slice(0, 3).map((s) => (

@@ -6,9 +6,9 @@ const images = import.meta.glob("../assets/certificates/*", { eager: true });
 const Certificate = () => {
   return (
     <section id="certificates" className="px-8 py-24">
-      <h1 className="text-center font-futura text-5xl font-extrabold uppercase leading-tight [color:#363636]">
+      <h2 className="text-center font-futura text-5xl font-extrabold uppercase leading-tight [color:#363636]">
         Licenses & Certifications
-      </h1>
+      </h2>
       <div className="mx-auto mt-20 grid max-w-lg gap-x-16 gap-y-10 lg:max-w-screen-lg lg:grid-cols-2 lg:px-32">
         {Data.map((item) => (
           <div className="flex gap-4" key={item.name}>
