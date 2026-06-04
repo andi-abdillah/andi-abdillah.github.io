@@ -13,6 +13,13 @@
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#741ce8" />
 
+    <!-- Preconnect to font origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+
+    <!-- Preload critical font: FuturaNow (font-display: fallback prevents swap CLS on slow networks) -->
+    <link rel="preload" href="/fonts/FuturaNowHeadline-CnXBd.woff2" as="font" type="font/woff2" crossorigin />
+
     <!-- SEO -->
     <meta name="description" content="Full-stack web developer building production-ready web apps with Laravel, React, and Next.js. Delivered real systems used by government departments and organizations." />
     <meta name="author" content="Amin Abdillah" />

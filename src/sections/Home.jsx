@@ -25,14 +25,12 @@ const Home = () => {
   const cardsRectRef = useRef(null);
 
   useEffect(() => {
-    // Wait for fonts before showing text — prevents font-swap CLS.
-    let triggered = false;
-    const trigger = () => { if (!triggered) { triggered = true; setMounted(true); } };
+    // Wait for fonts before showing text. With font-display: fallback, no CLS on slow networks.
     if (typeof document !== "undefined" && document.fonts?.ready) {
-      document.fonts.ready.then(trigger);
+      document.fonts.ready.then(() => setMounted(true));
+    } else {
+      setMounted(true); // SSR/tests fallback
     }
-    const t = setTimeout(trigger, 700);
-    return () => { triggered = true; clearTimeout(t); };
   }, []);
 
   useEffect(() => {
@@ -161,6 +159,7 @@ const Home = () => {
                     alt="Portfolio project screenshot"
                     width="796"
                     height="460"
+                    fetchPriority={i === 0 ? "high" : "auto"}
                     style={{ width: "100%", height: "auto", display: "block", userSelect: "none", filter: "drop-shadow(0px 20px 40px rgba(0,0,0,0.4))" }}
                   />
                   {/* Shimmer masked to laptop shape via the PNG itself */}
