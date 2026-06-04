@@ -52,8 +52,8 @@ Tailwind CSS with two custom theme tokens defined in [tailwind.config.js](tailwi
 - `secondary` → `#ffcb05` (yellow)
 
 Two fonts only — keep new UI within these:
-- `font-inter` → **Inter** (loaded via Google Fonts in [index.html](index.html)), applied globally on the root div in [main.jsx](src/main.jsx) so it is the default body font.
-- `font-futura` → **FuturaNowHeadline**, self-hosted in [public/fonts/](public/fonts/) via an `@font-face` in [src/index.css](src/index.css); used for headings and uppercase labels.
+- `font-inter` → **Inter**, self-hosted via `@fontsource/inter` (imported in [src/main.jsx](src/main.jsx)), applied globally on the root div. Do NOT use Google Fonts for Inter — it was removed to eliminate render-blocking external requests.
+- `font-futura` → **FuturaNowHeadline**, self-hosted in [public/fonts/](public/fonts/) via an `@font-face` in [src/index.css](src/index.css); used for headings and uppercase labels. The font file is preloaded in [index.html](index.html) via `<link rel="preload">` to reduce critical path latency.
 
 Device-themed gradients in the Abilities cards should stay within the purple/yellow brand palette to avoid clashing with the rest of the site.
 
@@ -71,7 +71,73 @@ Prettier is configured with `prettier-plugin-tailwindcss` ([.prettierrc](.pretti
 
 ### Deployment
 
-Deploys to GitHub Pages under `https://andi-abdillah.github.io/` via the `gh-pages` package. The `homepage` field in [package.json](package.json) must match the deployed URL.
+The site is deployed on **Vercel** at `https://www.aminabdillah.com/`. The canonical URL is set in [index.html](index.html) via `<link rel="canonical">`. Do NOT use `npm run deploy` (that pushes to GitHub Pages via `gh-pages`, which is a separate legacy deployment). Just push to `main` — Vercel auto-deploys.
+
+## Performance & Image Standards
+
+### Image pipeline — always follow this when adding images
+
+**Format:** All images must be **WebP**. Never commit PNG, JPG, or JFIF to `src/assets/`. Convert using `sharp` (already a dev dependency):
+
+```js
+const sharp = require('sharp');
+// Portfolio screenshots
+sharp('input.png').resize(800, 460, { fit: 'inside' }).webp({ quality: 82 }).toFile('output.webp');
+// Certificate logos (displayed at 40px, 3× retina headroom)
+sharp('logo.png').resize(120, 120, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 85 }).toFile('logo.webp');
+// Navbar logo (displayed at 24px)
+sharp('logo.png').resize(48, 48, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 85 }).toFile('logo.webp');
+```
+
+**Target sizes:**
+| Location | Displayed size | Max output size |
+|---|---|---|
+| Portfolio screenshots ([src/assets/portfolio/](src/assets/portfolio/)) | ~664px wide | 800×460px |
+| Certificate logos ([src/assets/certificates/](src/assets/certificates/)) | 40px (h-10 w-10) | 120×120px |
+| Navbar logo | 24px (h-6) | 48×48px |
+
+**After converting:** delete the original file, update the filename in `portfolioData.json` or `certificatesData.json` to use `.webp`.
+
+### Lazy loading
+
+All images below the fold must have `loading="lazy"`. Images in the initial viewport (Home section laptop cards) must NOT have `loading="lazy"` — they are critical for LCP.
+
+### Game components
+
+All game components in [src/sections/games/](src/sections/games/) are loaded with `React.lazy()` + `Suspense` in [src/sections/games/index.jsx](src/sections/games/index.jsx). Keep this pattern when adding new games — never import them eagerly.
+
+### Animation performance
+
+The Home section parallax tilt reads `getBoundingClientRect()` from a cached `cardsRectRef` (updated only on resize), not on every `mousemove`. Keep this pattern for any new animation that needs element bounds.
+
+## SEO Standards
+
+### Meta tags
+
+[index.html](index.html) contains: `<meta name="description">`, OpenGraph (`og:title`, `og:description`, `og:image`, `og:url`), Twitter Card, and `<link rel="canonical" href="https://www.aminabdillah.com/">`. The canonical URL is critical — do not remove it. It tells Google that `aminabdillah.com` is the authoritative URL, not the Vercel preview URL.
+
+### Heading hierarchy
+
+Every section heading must follow a sequential hierarchy. `<h1>` is used only once — in the Home section for "AMIN ABDILLAH". All other section headings use `<h2>`. Sub-headings within sections use `<h3>`. Never skip levels (h1 → h3 without h2).
+
+Current mapping:
+- Home: `h1` ("AMIN ABDILLAH")
+- Services, Portfolio, Abilities, Certificate, Contact, Mini Games: `h2`
+- Service card titles, project names, game titles: `h3`
+
+### Landmarks
+
+The page uses semantic HTML landmarks:
+- `<main>` wraps all sections except Navbar and Footer (set in [src/main.jsx](src/main.jsx))
+- `<footer>` is used for the Footer section
+- All social icon links have `aria-label`
+
+## Accessibility Standards
+
+- All interactive elements must have a visible label or `aria-label`. Icon-only buttons and links must have `aria-label`.
+- Game action buttons (catch bug, close tab, answer trivia) must have `aria-label` describing the action.
+- Images must have meaningful `alt` text. Decorative images use `aria-hidden="true"`.
+- Avoid `text-white/40` or lower opacity on colored backgrounds — contrast ratio falls below the 4.5:1 WCAG minimum. Minimum safe opacity on `bg-primary` (#741ce8) is approximately `text-white/70`.
 
 ## Writing Standards
 
