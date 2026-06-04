@@ -1,4 +1,3 @@
-import { HashRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import "@fontsource/inter/latin-400.css";
@@ -17,20 +16,18 @@ import Footer from "./sections/Footer";
 import Certificate from "./sections/Certificate";
 
 createRoot(document.getElementById("root")).render(
-  <HashRouter>
-    <div className="font-inter">
-      <Navbar />
-      <main>
-        <Home />
-        <Services />
-        <Portfolio />
-        <Abilities />
-        <Certificate />
-        <hr />
-        <Contact />
-        <Games />
-      </main>
-      <Footer />
-    </div>
-  </HashRouter>,
+  <div className="font-inter">
+    <Navbar />
+    <main>
+      <Home />
+      <Services />
+      <Portfolio />
+      <Abilities />
+      <Certificate />
+      <hr />
+      <Contact />
+      <Games />
+    </main>
+    <Footer />
+  </div>,
 );

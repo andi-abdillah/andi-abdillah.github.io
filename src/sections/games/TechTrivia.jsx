@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import shuffle from "../../utils/shuffle";
+import { BackButton, PrimaryButton } from "./ui";
 
 const TRIVIA = [
   {
@@ -279,12 +280,7 @@ const TechTriviaGame = ({ onBack }) => {
 
   return (
     <div>
-      <button
-        onClick={onBack}
-        className="mb-6 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
-      >
-        <span className="leading-none">←</span><span>Back to Games</span>
-      </button>
+      <BackButton onClick={onBack} />
 
       {gameState === "idle" && (
         <div className="flex flex-col items-center gap-6 py-12">
@@ -292,12 +288,7 @@ const TechTriviaGame = ({ onBack }) => {
           <p className="font-futura text-lg uppercase text-white/60">
             How well do you know your tech?
           </p>
-          <button
-            onClick={startGame}
-            className="rounded-full bg-primary px-10 py-3 font-futura font-bold uppercase text-white hover:opacity-80"
-          >
-            Start
-          </button>
+          <PrimaryButton onClick={startGame}>Start</PrimaryButton>
         </div>
       )}
 
@@ -374,12 +365,7 @@ const TechTriviaGame = ({ onBack }) => {
                 ? "Not Bad! 💪"
                 : "Keep Learning 📚"}
           </p>
-          <button
-            onClick={startGame}
-            className="mt-2 rounded-full bg-primary px-10 py-3 font-futura font-bold uppercase text-white hover:opacity-80"
-          >
-            Play Again
-          </button>
+          <PrimaryButton onClick={startGame} className="mt-2">Play Again</PrimaryButton>
         </div>
       )}
     </div>

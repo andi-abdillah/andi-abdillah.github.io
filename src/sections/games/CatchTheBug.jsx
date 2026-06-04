@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { BackButton, PrimaryButton, GridOverlay } from "./ui";
 
 const GAME_DURATION = 30;
 const NORMAL_BUGS = ["🐛", "🪲", "🦟", "🪳", "🕷️"];
@@ -142,12 +143,7 @@ const CatchTheBugGame = ({ onBack }) => {
 
   return (
     <div>
-      <button
-        onClick={onBack}
-        className="mb-6 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
-      >
-        <span className="leading-none">←</span><span>Back to Games</span>
-      </button>
+      <BackButton onClick={onBack} />
 
       <div className="mx-auto mb-4 flex max-w-2xl items-center justify-between px-2">
         <div className="flex items-center gap-2">
@@ -179,14 +175,7 @@ const CatchTheBugGame = ({ onBack }) => {
           cursor: gameState === "playing" ? "crosshair" : "default",
         }}
       >
-        <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.04]">
-          {[...Array(10)].map((_, i) => (
-            <line key={`v${i}`} x1={`${i * 10}%`} y1="0" x2={`${i * 10}%`} y2="100%" stroke="white" strokeWidth="1" />
-          ))}
-          {[...Array(6)].map((_, i) => (
-            <line key={`h${i}`} x1="0" y1={`${i * 20}%`} x2="100%" y2={`${i * 20}%`} stroke="white" strokeWidth="1" />
-          ))}
-        </svg>
+        <GridOverlay />
 
         {gameState === "idle" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
@@ -197,12 +186,7 @@ const CatchTheBugGame = ({ onBack }) => {
               <span style={{ color: "#60a5fa" }}>fast = +2</span>
               <span style={{ color: "#ffcb05" }}>⭐ golden = +5</span>
             </div>
-            <button
-              onClick={startGame}
-              className="rounded-full bg-primary px-10 py-3 font-futura font-bold uppercase text-white hover:opacity-80"
-            >
-              Start
-            </button>
+            <PrimaryButton onClick={startGame}>Start</PrimaryButton>
           </div>
         )}
 
@@ -234,12 +218,7 @@ const CatchTheBugGame = ({ onBack }) => {
                     <p className="text-[10px] text-white/40">accuracy</p>
                   </div>
                 </div>
-                <button
-                  onClick={startGame}
-                  className="mt-2 rounded-full bg-primary px-10 py-3 font-futura font-bold uppercase text-white hover:opacity-80"
-                >
-                  Play Again
-                </button>
+                <PrimaryButton onClick={startGame} className="mt-2">Play Again</PrimaryButton>
               </div>
             );
           })()}

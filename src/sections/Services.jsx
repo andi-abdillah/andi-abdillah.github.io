@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import useInView from "../hooks/useInView";
 
 const SERVICES = [
   {
@@ -244,17 +244,7 @@ const Label = ({ service }) => (
 );
 
 const Services = () => {
-  const [inView, setInView] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.08 },
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const [sectionRef, inView] = useInView(0.08);
 
   return (
     <section id="services" ref={sectionRef} className="bg-primary px-8 py-24">

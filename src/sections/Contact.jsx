@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
-import { FaLinkedinIn, FaGithub } from "react-icons/fa";
-import { HiOutlineMail } from "react-icons/hi";
 import { IoSend } from "react-icons/io5";
+import socialLinks from "../data/socialLinks";
 
 const GREETING = "Hey! What would you like to know about me?";
 
@@ -28,12 +26,6 @@ const SUGGESTIONS = [
     a: "Sure! There are mini games below, scroll down to check them out. 👇",
     scroll: true,
   },
-];
-
-const socialLinks = [
-  { href: "https://www.linkedin.com/in/amin-abdillah-099225208/", icon: <FaLinkedinIn />, label: "LinkedIn" },
-  { href: "mailto:aminabdillah.id@gmail.com?subject=Mail from our Website", icon: <HiOutlineMail />, label: "Email" },
-  { href: "https://github.com/andi-abdillah", icon: <FaGithub />, label: "GitHub" },
 ];
 
 const Avatar = () => (
@@ -92,7 +84,7 @@ const Contact = () => {
     }
   };
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     const text = input.trim();
     if (!text || sending) return;
@@ -101,8 +93,9 @@ const Contact = () => {
     setSending(true);
     setTyping(true);
 
-    emailjs
-      .send(
+    try {
+      const { default: emailjs } = await import("@emailjs/browser");
+      await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
@@ -113,17 +106,15 @@ const Contact = () => {
           reply_to: "",
         },
         { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY },
-      )
-      .then(() => {
-        setTyping(false);
-        setSending(false);
-        setMessages((m) => [...m, { role: "bot", text: "Your message has been sent! I'll get back to you as soon as I can. If you forgot to include your contact details, feel free to reach out via the icons below." }]);
-      })
-      .catch(() => {
-        setTyping(false);
-        setSending(false);
-        setMessages((m) => [...m, { role: "bot", text: "Oops, something went wrong. Please try again or reach out directly via email or LinkedIn below." }]);
-      });
+      );
+      setTyping(false);
+      setSending(false);
+      setMessages((m) => [...m, { role: "bot", text: "Your message has been sent! I'll get back to you as soon as I can. If you forgot to include your contact details, feel free to reach out via the icons below." }]);
+    } catch {
+      setTyping(false);
+      setSending(false);
+      setMessages((m) => [...m, { role: "bot", text: "Oops, something went wrong. Please try again or reach out directly via email or LinkedIn below." }]);
+    }
   };
 
   return (

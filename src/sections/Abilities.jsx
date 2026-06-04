@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { TbBrandHtml5, TbServer, TbBrandGithub, TbCloud } from "react-icons/tb";
+import useInView from "../hooks/useInView";
 
 const formatNow = () => {
   const now = new Date();
@@ -79,18 +80,8 @@ const SkillCard = ({ title, items, icon, inView, gradient, textColor, time }) =>
 );
 
 const Abilities = () => {
-  const [inView, setInView] = useState(false);
+  const [sectionRef, inView] = useInView(0.15);
   const [time, setTime] = useState(formatNow);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.15 },
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const id = setInterval(() => setTime(formatNow()), 1000);

@@ -98,9 +98,20 @@ sharp('logo.png').resize(48, 48, { fit: 'inside', withoutEnlargement: true }).we
 
 **After converting:** delete the original file, update the filename in `portfolioData.json` or `certificatesData.json` to use `.webp`.
 
+### Image attributes (every `<img>`)
+
+- Always set explicit `width` and `height` attributes matching the file's natural aspect ratio (e.g. portfolio screenshots `width="800" height="460"`, certificate logos `width="40" height="40"`). This reserves layout space and prevents CLS. Pair with `w-auto`/`h-auto` in CSS so the visual size stays responsive.
+- Logos that are NOT square must use `object-contain` so they are not stretched when placed in a square box (e.g. certificate logos in `h-10 w-10`).
+
 ### Lazy loading
 
 All images below the fold must have `loading="lazy"`. Images in the initial viewport (Home section laptop cards) must NOT have `loading="lazy"` — they are critical for LCP.
+
+### Bundle & asset hygiene
+
+- **No unused files** in `public/` or `src/assets/` — everything in `public/` ships verbatim to every visitor. Before committing, confirm new assets are actually referenced.
+- **Fonts:** Inter is imported latin-subset only (`@fontsource/inter/latin-400.css` etc. in [src/main.jsx](src/main.jsx)), NOT the full `@fontsource/inter/400.css` which ships ~28 unused Cyrillic/Greek/Vietnamese files. The site is English/Indonesian (Latin only).
+- **Favicon/icons** are generated from `src/assets/logo.png` source and kept small. `favicon.ico` must stay under ~15KB (use `png-to-ico` from 32+48 PNGs). Also generate `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` into `public/`, referenced by [index.html](index.html) and [public/site.webmanifest](public/site.webmanifest). Never ship a multi-hundred-KB `.ico`.
 
 ### Game components
 
@@ -108,13 +119,21 @@ All game components in [src/sections/games/](src/sections/games/) are loaded wit
 
 ### Animation performance
 
-The Home section parallax tilt reads `getBoundingClientRect()` from a cached `cardsRectRef` (updated only on resize), not on every `mousemove`. Keep this pattern for any new animation that needs element bounds.
+- The Home section parallax tilt reads `getBoundingClientRect()` from a cached `cardsRectRef` (updated only on resize), not on every `mousemove`. Keep this pattern for any new animation that needs element bounds.
+- Continuous `requestAnimationFrame` loops must pause when their section is offscreen. The Home floating/tilt loop is gated on `cardsInView` (from an `IntersectionObserver`) so it stops burning CPU/battery when scrolled away. Any new rAF-driven animation must do the same.
 
 ## SEO Standards
 
 ### Meta tags
 
-[index.html](index.html) contains: `<meta name="description">`, OpenGraph (`og:title`, `og:description`, `og:image`, `og:url`), Twitter Card, and `<link rel="canonical" href="https://www.aminabdillah.com/">`. The canonical URL is critical — do not remove it. It tells Google that `aminabdillah.com` is the authoritative URL, not the Vercel preview URL.
+[index.html](index.html) contains: `<meta name="description">`, OpenGraph (`og:title`, `og:description`, `og:image`, `og:url`, `og:site_name`, `og:locale`, `og:image:width/height/alt`), Twitter Card, `<meta name="robots" content="index, follow, max-image-preview:large">`, and `<link rel="canonical" href="https://www.aminabdillah.com/">`. The canonical URL is critical — do not remove it. It tells Google that `aminabdillah.com` is the authoritative URL, not the Vercel preview URL.
+
+`og:image` points to `/og-image.png` (1200×630), a branded card mirroring the hero (purple gradient + "AMIN ABDILLAH" + role + tech stack). Regenerate it with `sharp` from an SVG if the branding changes — keep it exactly 1200×630.
+
+### Structured data & crawl files
+
+- [index.html](index.html) contains a JSON-LD `@graph` with linked `Person`, `WebSite`, and `ProfilePage` schemas (tied by `@id`). The `Person` node carries name, jobTitle, location, `knowsAbout`, and `sameAs` (LinkedIn + GitHub). This builds the "Amin Abdillah" entity for Google and is the main lever for ranking the real domain above the Vercel URL. Keep `sameAs` and contact details in sync with the actual links.
+- [public/sitemap.xml](public/sitemap.xml) lists the single root URL (hash routes are not separate URLs). [public/robots.txt](public/robots.txt) references it. Keep both present.
 
 ### Heading hierarchy
 

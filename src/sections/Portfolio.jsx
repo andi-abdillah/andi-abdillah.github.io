@@ -1,21 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Data from "../data/portfolioData.json";
 import Modal from "../components/Modal";
+import useInView from "../hooks/useInView";
 
 const images = import.meta.glob("../assets/portfolio/*", { eager: true });
 
 const ProjectItem = ({ item, onNoLink }) => {
-  const [inView, setInView] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.2 },
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  const [ref, inView] = useInView();
 
   return (
     <div

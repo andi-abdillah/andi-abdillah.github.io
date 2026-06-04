@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { BackButton, GridOverlay } from "./ui";
 
 const GRAVITY      = 0.48;
 const TRAY_W       = 60;
@@ -311,12 +312,7 @@ const BottleFlipGame = ({ onBack }) => {
 
   return (
     <div>
-      <button
-        onClick={(e) => { e.stopPropagation(); onBack(); }}
-        className="mb-4 flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white/70 transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
-      >
-        <span className="leading-none">←</span><span>Back to Games</span>
-      </button>
+      <BackButton className="mb-4" onClick={(e) => { e.stopPropagation(); onBack(); }} />
 
       {/* Stats */}
       <div className="mx-auto mb-4 grid max-w-2xl grid-cols-4 gap-3 px-2 text-center">
@@ -380,14 +376,7 @@ const BottleFlipGame = ({ onBack }) => {
         onPointerCancel={release}
       >
         {/* Grid overlay */}
-        <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.04]">
-          {[...Array(10)].map((_, i) => (
-            <line key={`v${i}`} x1={`${i * 10}%`} y1="0" x2={`${i * 10}%`} y2="100%" stroke="white" strokeWidth="1" />
-          ))}
-          {[...Array(6)].map((_, i) => (
-            <line key={`h${i}`} x1="0" y1={`${i * 20}%`} x2="100%" y2={`${i * 20}%`} stroke="white" strokeWidth="1" />
-          ))}
-        </svg>
+        <GridOverlay />
 
         {/* Dynamic wind gusts */}
         {windOn && gusts.map(gust =>
