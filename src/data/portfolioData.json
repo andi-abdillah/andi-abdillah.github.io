@@ -1,7 +1,7 @@
 [
   {
     "name": "Puspetindo ERP System",
-    "description": "A full-stack ERP system for Puspetindo covering sales, procurement, inventory, finance modules, and more. Built with Laravel, React, TypeScript, and Inertia.js.",
+    "description": "A full-stack ERP system for Puspetindo covering sales, procurement, inventory, finance modules, and more. Built with Laravel, React, TypeScript, Inertia.js, Tailwind CSS, and Shadcn UI.",
     "image": "puspetindo.webp",
     "year": "2026",
     "link": "",
@@ -9,21 +9,21 @@
   },
   {
     "name": "CSIRT Ticketing System",
-    "description": "A streamlined ticketing system developed for BangkalanKab-CSIRT to enhance issue reporting and resolution. Built with Laravel, React, Inertia.js, and MySQL.",
+    "description": "A streamlined ticketing system developed for BangkalanKab-CSIRT to enhance issue reporting and resolution. Built with Laravel, React, Inertia.js, MySQL, Tailwind CSS, and DaisyUI.",
     "image": "tiket-bangkalankab.webp",
     "year": "2024",
     "link": "https://tiket.bangkalankab.go.id/"
   },
   {
     "name": "CSIRT Web Profile",
-    "description": "An official web profile for BangkalanKab-CSIRT showcasing its mission, services, and achievements in cybersecurity. Built with Laravel and MySQL.",
+    "description": "An official web profile for BangkalanKab-CSIRT showcasing its mission, services, and achievements in cybersecurity. Built with Laravel, MySQL, Tailwind CSS, and DaisyUI.",
     "image": "csirt-bangkalankab.webp",
     "year": "2024",
     "link": "https://csirt.bangkalankab.go.id"
   },
   {
     "name": "Pen & Paper",
-    "description": "A web-based social media platform for sharing and engaging through written content, connecting people through creative expression. Built with React, Hapi.js, MySQL, and Sequelize.",
+    "description": "A web-based social media platform for sharing and engaging through written content, connecting people through creative expression. Built with React, Hapi.js, MySQL, Sequelize ORM, Tailwind CSS, and DaisyUI.",
     "image": "pen-paper.webp",
     "year": "2023",
     "link": "",
@@ -31,7 +31,7 @@
   },
   {
     "name": "Point of Sale (POS) System",
-    "description": "A Point of Sale system designed for Omah Jawa restaurant to handle order management, sales tracking, and customer service efficiently. Built with Laravel and MySQL.",
+    "description": "A Point of Sale system designed for Omah Jawa restaurant to handle order management, sales tracking, and customer service efficiently. Built with Laravel, MySQL, Bootstrap, and Material Dashboard.",
     "image": "omah-jawa.webp",
     "year": "2023",
     "link": "",
@@ -39,7 +39,7 @@
   },
   {
     "name": "Snake Game",
-    "description": "A classic Snake game where the player controls a growing snake and avoids colliding with its own body. Built with vanilla JavaScript and HTML Canvas.",
+    "description": "A classic Snake game where the player controls a growing snake and avoids colliding with its own body. Built with vanilla JavaScript, HTML Canvas, and Tailwind CSS.",
     "image": "snake-game.webp",
     "year": "2022",
     "link": "https://amin-abdillah-snake-game.vercel.app/"
