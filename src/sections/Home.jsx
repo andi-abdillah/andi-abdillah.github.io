@@ -12,17 +12,8 @@ const CARDS = [
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
-// "Amin Abdillah" / "Web Developer": 12 non-space chars, last at index 11.
-// Last char delay: 11 * 0.045 = 0.495s; ends at 0.495 + 0.65 = 1.145s after mounted.
-// mounted fires ~100ms after load → reveal done at ~1245ms.
-// META_DELAY: wait 1200ms after mounted fires so metadata fades in after all letters land.
-const CHAR_DELAY   = 0.045; // seconds between each letter
-const REVEAL_DUR   = 0.65;  // seconds, per letter transition
-const META_DELAY   = 1200;  // ms after mounted fires
-
 const Home = () => {
   const [mounted, setMounted]       = useState(false);
-  const [metaVisible, setMetaVisible] = useState(false);
   const [cardsInView, setCardsInView] = useState(false);
   const wrapperRefs  = useRef([]);
   const cardsRef     = useRef(null);
@@ -33,33 +24,16 @@ const Home = () => {
   const currentTiltY = useRef(0);
   const cardsRectRef = useRef(null);
 
-  // Read once at mount; won't trigger re-render if user changes preference later.
-  const reducedMotion = useRef(
-    typeof window !== "undefined"
-      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      : false,
-  ).current;
-
   useEffect(() => {
-    // Wait for fonts to load before showing any text.
-    // This prevents font-swap CLS: containers become visible only after FuturaNow
-    // and Inter are fully loaded, so there is no fallback→loaded reflow.
-    if (reducedMotion) { setMounted(true); return; }
+    // Wait for fonts before showing text — prevents font-swap CLS.
     let triggered = false;
     const trigger = () => { if (!triggered) { triggered = true; setMounted(true); } };
     if (typeof document !== "undefined" && document.fonts?.ready) {
       document.fonts.ready.then(trigger);
     }
-    const t = setTimeout(trigger, 700); // fallback if fonts.ready stalls
+    const t = setTimeout(trigger, 700);
     return () => { triggered = true; clearTimeout(t); };
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    if (!mounted) return;
-    if (reducedMotion) { setMetaVisible(true); return; }
-    const t = setTimeout(() => setMetaVisible(true), META_DELAY);
-    return () => clearTimeout(t);
-  }, [mounted, reducedMotion]);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -104,57 +78,17 @@ const Home = () => {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  // Renders letter-by-letter masked reveal spans for a single word.
-  // globalOffset shifts the stagger index so multi-word reveals flow continuously.
-  // Keys use (globalOffset + i) to stay unique when multiple words are siblings.
-  const letters = (word, globalOffset) =>
-    word.split("").map((char, i) => (
-      <span
-        key={globalOffset + i}
-        aria-hidden="true"
-        style={{
-          display: "inline-block",
-          overflow: "hidden",
-          // Extra room below the clip boundary prevents descender/baseline clipping.
-          // Negative margin cancels the layout effect so spacing is unchanged.
-          paddingBottom: "0.25em",
-          marginBottom: "-0.25em",
-        }}
-      >
-        <span
-          style={{
-            display: "inline-block",
-            transform: reducedMotion || mounted ? "translateY(0)" : "translateY(110%)",
-            transition:
-              !reducedMotion && mounted
-                ? `transform ${REVEAL_DUR}s cubic-bezier(0.215,0.61,0.355,1) ${(globalOffset + i) * CHAR_DELAY}s`
-                : "none",
-          }}
-        >
-          {char}
-        </span>
-      </span>
-    ));
-
-  // Fade-in style for metadata items that appear after the reveal completes.
-  const metaStyle = (extraDelay = 0) => ({
-    opacity: metaVisible ? 1 : 0,
-    transition: metaVisible ? `opacity 0.5s ease ${extraDelay}s` : "none",
-  });
-
   return (
     <section
       id="home"
       className="relative flex flex-col items-center overflow-hidden bg-primary px-8 pb-16 pt-16 text-center sm:pt-10 md:pt-8"
     >
-      {/* TOP + Name — rapat */}
+{/* TOP + Name — rapat */}
       <div
         className="relative z-10 flex flex-col items-center gap-6 md:gap-3"
-        style={{ opacity: mounted ? 1 : 0, transition: mounted ? "opacity 0.8s ease" : "none" }}
+        style={{ opacity: mounted ? 1 : 0, transition: mounted ? "opacity 1.2s ease" : "none" }}
       >
-        {/* Location & email: invisible (opacity 0) until reveal completes.
-            They keep their layout space so the hero doesn't shift on reveal. */}
-        <div className="flex flex-col items-center gap-1" style={metaStyle()}>
+        <div className="flex flex-col items-center gap-1">
           <p className="font-futura text-sm font-bold uppercase tracking-[0.09em] text-white">
             Gresik, East Java, Indonesia
           </p>
@@ -163,22 +97,30 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Name — masked letter reveal, staggered left-to-right across both words */}
+        {/* Name */}
         <h1
           className="font-futura font-extrabold uppercase text-white"
           style={{ fontSize: "clamp(3.125rem, 10vw, 85px)", letterSpacing: "-0.02em", lineHeight: 0.82 }}
-          aria-label="Amin Abdillah"
         >
-          {/* "Amin" chars: global indices 0-3; "Abdillah" chars: global indices 4-11 */}
-          {["Amin", "Abdillah"].map((word, wi) => (
-            <span key={wi} className="block sm:inline-block">
-              {wi > 0 && (
-                <span className="hidden sm:inline-block sm:w-[0.3ch]" aria-hidden="true" />
-              )}
-              {letters(word, wi === 0 ? 0 : 4)}
+          {["Amin", "Abdillah"].map((word, i) => (
+            <span key={i} className="block sm:inline-block">
+              {i > 0 && <span className="hidden sm:inline-block sm:w-[0.3ch]" />}
+              <span
+                className="inline-block"
+                style={{
+                  transformOrigin: "bottom",
+                  transform: mounted ? "scaleY(1) translateY(0)" : "scaleY(0) translateY(0.25ch)",
+                  transition: mounted
+                    ? `transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 0.1}s`
+                    : "none",
+                }}
+              >
+                {word}
+              </span>
             </span>
           ))}
         </h1>
+
       </div>
 
       {/* Cards — satu container, CSS handles mobile 2x2 vs desktop 4-in-a-row */}
@@ -246,34 +188,21 @@ const Home = () => {
       {/* BOT */}
       <div
         className="mt-12 flex flex-col items-center gap-1 lg:mt-6"
-        style={{ opacity: mounted ? 1 : 0, transition: mounted ? "opacity 0.8s ease" : "none" }}
+        style={{ opacity: mounted ? 1 : 0, transition: mounted ? "opacity 1.2s ease" : "none" }}
       >
-        {/* "Web Developer" — same masked reveal timing as "Amin Abdillah" */}
-        {/* "Web" chars: global indices 0-2; "Developer" chars: global indices 3-11 */}
-        <span className="sr-only">Web Developer</span>
         <p
           className="font-futura font-extrabold uppercase"
           style={{ color: "rgba(255,255,255,0.25)", fontSize: "clamp(2rem, 12vw, 130px)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
-          aria-hidden="true"
         >
-          {letters("Web", 0)}
-          {" "}
-          {letters("Developer", 3)}
+          Web Developer
         </p>
-
-        {/* Tech labels: fade in after reveal, staggered slightly */}
-        <p
-          className="mt-2 font-futura text-sm font-bold uppercase tracking-[0.09em] text-white"
-          style={metaStyle(0)}
-        >
+        <p className="mt-2 font-futura text-sm font-bold uppercase tracking-[0.09em] text-white">
           Technologies Include
         </p>
-        <p
-          className="font-futura text-xs uppercase tracking-[0.09em] text-white/80"
-          style={metaStyle(0.1)}
-        >
+        <p className="font-futura text-xs uppercase tracking-[0.09em] text-white/80">
           Laravel, Next.js, React.js, Tailwind CSS, TypeScript
         </p>
+
       </div>
     </section>
   );
