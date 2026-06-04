@@ -117,8 +117,8 @@ const Home = () => {
           overflow: "hidden",
           // Extra room below the clip boundary prevents descender/baseline clipping.
           // Negative margin cancels the layout effect so spacing is unchanged.
-          paddingBottom: "0.12em",
-          marginBottom: "-0.12em",
+          paddingBottom: "0.25em",
+          marginBottom: "-0.25em",
         }}
       >
         <span

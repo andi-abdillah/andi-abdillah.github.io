@@ -70,11 +70,7 @@
           "name": "Amin Abdillah | Web Developer",
           "description": "Portfolio of Amin Abdillah, a full-stack web developer from Gresik, East Java.",
           "publisher": { "@id": "https://www.aminabdillah.com/#person" },
-          "inLanguage": "en",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://www.aminabdillah.com/"
-          }
+          "inLanguage": "en"
         },
         {
           "@type": "ProfilePage",
@@ -82,8 +78,27 @@
           "url": "https://www.aminabdillah.com/",
           "name": "Amin Abdillah | Web Developer",
           "isPartOf": { "@id": "https://www.aminabdillah.com/#website" },
-          "mainEntity": { "@id": "https://www.aminabdillah.com/#person" },
-          "about": { "@id": "https://www.aminabdillah.com/#person" },
+          "mainEntity": {
+            "@type": "Person",
+            "@id": "https://www.aminabdillah.com/#person",
+            "name": "Amin Abdillah",
+            "url": "https://www.aminabdillah.com/",
+            "image": "https://www.aminabdillah.com/og-image.png",
+            "jobTitle": "Web Developer",
+            "email": "aminabdillah.id@gmail.com",
+            "description": "Full-stack web developer from Gresik, East Java, specializing in Laravel, React, Next.js, and TypeScript.",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Gresik",
+              "addressRegion": "East Java",
+              "addressCountry": "ID"
+            },
+            "knowsAbout": ["Laravel", "Next.js", "React", "TypeScript", "Tailwind CSS", "Full-stack Web Development"],
+            "sameAs": [
+              "https://www.linkedin.com/in/amin-abdillah-099225208/",
+              "https://github.com/andi-abdillah"
+            ]
+          },
           "inLanguage": "en"
         }
       ]
