@@ -33,9 +33,11 @@ const ProjectItem = ({ item, onNoLink }) => {
           return (
             <div className="portfolio-item relative m-auto w-fit">
               <img
-                className="h-44 md:h-64 lg:h-72"
+                className="h-44 w-auto md:h-64 lg:h-72"
                 draggable="false"
                 loading="lazy"
+                width="800"
+                height="460"
                 src={imgSrc}
                 alt={item.name}
               />

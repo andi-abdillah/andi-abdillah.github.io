@@ -58,9 +58,10 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    if (!cardsInView) return;
     rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [animate]);
+  }, [animate, cardsInView]);
 
   useEffect(() => {
     const update = () => {
@@ -152,7 +153,9 @@ const Home = () => {
                     draggable="false"
                     src={imgSrc}
                     alt="Portfolio project screenshot"
-                    style={{ width: "100%", display: "block", userSelect: "none", filter: "drop-shadow(0px 20px 40px rgba(0,0,0,0.4))" }}
+                    width="800"
+                    height="460"
+                    style={{ width: "100%", height: "auto", display: "block", userSelect: "none", filter: "drop-shadow(0px 20px 40px rgba(0,0,0,0.4))" }}
                   />
                   {/* Shimmer masked to laptop shape via the PNG itself */}
                   <div

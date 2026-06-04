@@ -13,7 +13,10 @@ const Certificate = () => {
         {Data.map((item) => (
           <div className="flex gap-4" key={item.name}>
             <img
-              className="mt-1 h-10 w-10"
+              className="mt-1 h-10 w-10 object-contain"
+              loading="lazy"
+              width="40"
+              height="40"
               src={images[`../assets/certificates/${item.logo}`]?.default || ""}
               alt={item.name}
             />

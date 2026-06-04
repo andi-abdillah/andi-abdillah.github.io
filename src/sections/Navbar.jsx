@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/logo.webp";
 
 const MENU_ITEMS = [
   { label: "home" },
@@ -46,7 +46,7 @@ const Navbar = () => {
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-8 text-white md:px-16 lg:px-32">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <img className="h-4 w-4" src={Logo} alt="logo" />
+          <img className="h-4 w-4" src={Logo} alt="Amin Abdillah logo" width="48" height="48" />
           <span className="text-lg font-bold">andi.id</span>
         </div>
 
