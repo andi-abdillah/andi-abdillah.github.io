@@ -7,7 +7,8 @@
   src: url("/fonts/FuturaNowHeadline-CnXBd.woff2") format("woff2");
   font-weight: 800;
   font-style: normal;
-  font-display: fallback;
+  /* swap is shift-free now that a metric-matched fallback exists (fontaine). */
+  font-display: swap;
 }
 
 * {
