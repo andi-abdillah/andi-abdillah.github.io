@@ -27,7 +27,7 @@ const ProjectItem = ({ item, onNoLink }) => {
                 className="h-44 w-auto md:h-64 lg:h-72"
                 draggable="false"
                 loading="lazy"
-                width="800"
+                width="796"
                 height="460"
                 src={imgSrc}
                 alt={item.name}

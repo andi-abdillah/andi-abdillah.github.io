@@ -217,7 +217,7 @@ const Home = () => {
                     draggable="false"
                     src={imgSrc}
                     alt="Portfolio project screenshot"
-                    width="800"
+                    width="796"
                     height="460"
                     style={{ width: "100%", height: "auto", display: "block", userSelect: "none", filter: "drop-shadow(0px 20px 40px rgba(0,0,0,0.4))" }}
                   />
