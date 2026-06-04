@@ -6,7 +6,7 @@ import useInView from "../hooks/useInView";
 const images = import.meta.glob("../assets/portfolio/*", { eager: true });
 
 const ProjectItem = ({ item, onNoLink }) => {
-  const [ref, inView] = useInView();
+  const [ref, inView] = useInView(0.2, true);
 
   return (
     <div

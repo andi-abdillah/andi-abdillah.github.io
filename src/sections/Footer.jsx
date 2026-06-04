@@ -14,7 +14,10 @@ const Footer = () => {
         ))}
       </div>
       <div className="my-6">
-        <p className="flex items-center justify-center gap-1 whitespace-nowrap text-center text-sm font-medium text-white sm:text-lg">
+        <p className="mb-3 text-center font-futura text-sm font-bold uppercase tracking-[0.09em] text-secondary">
+          Working hard to make the internet awesome
+        </p>
+        <p className="flex items-center justify-center gap-1 whitespace-nowrap text-center text-xs font-medium text-white sm:text-sm">
           Handcrafted by me{" "}
           <span className="text-xl">
             <LuCopyright />

@@ -196,6 +196,7 @@ const Home = () => {
         <p className="font-futura text-xs uppercase tracking-[0.09em] text-white/60">
           Laravel, Next.js, React.js, Tailwind CSS, TypeScript
         </p>
+
       </div>
     </section>
   );

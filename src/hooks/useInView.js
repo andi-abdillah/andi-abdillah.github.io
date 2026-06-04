@@ -1,18 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 
-// Returns [ref, inView] — sets inView true while the element intersects the viewport.
-export default function useInView(threshold = 0.2) {
+export default function useInView(threshold = 0.2, once = false) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          if (once) observer.disconnect();
+        } else if (!once) {
+          setInView(false);
+        }
+      },
       { threshold },
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [threshold]);
+  }, [threshold, once]);
 
   return [ref, inView];
 }
