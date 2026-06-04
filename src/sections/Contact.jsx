@@ -125,7 +125,7 @@ const Contact = () => {
           <h2 className="font-futura text-5xl font-extrabold uppercase leading-tight text-white">
             Get in touch
           </h2>
-          <p className="mt-4 max-w-xs text-white/60">
+          <p className="mt-4 max-w-xs text-white/80">
             Have a project in mind or want to discuss an opportunity? Feel free to reach out.
           </p>
         </div>
@@ -157,7 +157,7 @@ const Contact = () => {
                 <p className="font-futura text-sm font-bold uppercase text-white">Amin Abdillah</p>
                 <div className="flex items-center gap-1.5">
                   <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-green-400" style={{ boxShadow: "0 0 5px #4ade80" }} />
-                  <p className="text-[10px] text-white/40">Usually replies fast</p>
+                  <p className="text-[10px] text-white/60">Usually replies fast</p>
                 </div>
               </div>
             </div>
@@ -236,7 +236,7 @@ const Contact = () => {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={link.label}
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white"
                   >
                     {link.icon}
                   </a>

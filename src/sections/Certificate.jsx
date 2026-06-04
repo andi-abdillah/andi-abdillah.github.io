@@ -22,14 +22,17 @@ const Certificate = () => {
             />
             <div className="flex flex-col">
               <div className="flex-1">
-                <h4 className="font-futura font-bold uppercase text-gray-800">{item.name}</h4>
+                <h3 className="font-futura font-bold uppercase text-gray-800">{item.name}</h3>
                 <p className="font-light text-gray-600">{item.organization}</p>
               </div>
               <div className="mt-4">
-                <a href={item.url} target="_blank" rel="noreferrer">
-                  <button className="flex items-center gap-1 rounded-full border border-primary px-7 py-2 font-futura leading-none uppercase text-primary hover:bg-primary hover:text-white">
-                    Show Credentials <IoMdArrowForward />
-                  </button>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-[44px] items-center gap-1 rounded-full border border-primary px-7 font-futura leading-none uppercase text-primary hover:bg-primary hover:text-white"
+                >
+                  Show Credentials <IoMdArrowForward />
                 </a>
               </div>
             </div>

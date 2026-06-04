@@ -158,7 +158,7 @@ const Home = () => {
           <p className="font-futura text-sm font-bold uppercase tracking-[0.09em] text-white">
             Gresik, East Java, Indonesia
           </p>
-          <p className="font-futura text-xs uppercase tracking-[0.09em] text-white/60">
+          <p className="font-futura text-xs uppercase tracking-[0.09em] text-white/80">
             aminabdillah.id@gmail.com
           </p>
         </div>
@@ -250,10 +250,11 @@ const Home = () => {
       >
         {/* "Web Developer" — same masked reveal timing as "Amin Abdillah" */}
         {/* "Web" chars: global indices 0-2; "Developer" chars: global indices 3-11 */}
+        <span className="sr-only">Web Developer</span>
         <p
           className="font-futura font-extrabold uppercase"
           style={{ color: "rgba(255,255,255,0.25)", fontSize: "clamp(2rem, 12vw, 130px)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
-          aria-label="Web Developer"
+          aria-hidden="true"
         >
           {letters("Web", 0)}
           {" "}
@@ -268,7 +269,7 @@ const Home = () => {
           Technologies Include
         </p>
         <p
-          className="font-futura text-xs uppercase tracking-[0.09em] text-white/60"
+          className="font-futura text-xs uppercase tracking-[0.09em] text-white/80"
           style={metaStyle(0.1)}
         >
           Laravel, Next.js, React.js, Tailwind CSS, TypeScript

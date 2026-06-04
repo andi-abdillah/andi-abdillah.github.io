@@ -36,7 +36,7 @@ const Games = () => {
   return (
     <section id="catch-the-bug" className="bg-[#0d0d0d] px-8 py-24">
       <h2 className="mb-2 text-center font-futura text-5xl font-extrabold uppercase text-white">Mini Games</h2>
-      <p className="mb-12 text-center text-sm text-white/40">Take a break, pick a game</p>
+      <p className="mb-12 text-center text-sm text-white/70">Take a break, pick a game</p>
 
       {!activeGame && (
         <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-5">

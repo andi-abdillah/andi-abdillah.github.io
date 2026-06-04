@@ -149,7 +149,7 @@ const CatchTheBugGame = ({ onBack }) => {
         <div className="flex items-center gap-2">
           <span className="text-2xl">🎯</span>
           <span className="font-futura text-2xl font-bold text-white">{score}</span>
-          <span className="text-xs text-white/40">pts</span>
+          <span className="text-xs text-white/70">pts</span>
         </div>
         <div
           className="font-futura text-3xl font-extrabold tabular-nums"
@@ -158,7 +158,7 @@ const CatchTheBugGame = ({ onBack }) => {
           {timeLeft}s
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-white/40">missed</span>
+          <span className="text-xs text-white/70">missed</span>
           <span className="font-futura text-2xl font-bold text-red-400">{missed}</span>
           <span className="text-2xl">💨</span>
         </div>
@@ -181,7 +181,7 @@ const CatchTheBugGame = ({ onBack }) => {
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
             <p className="text-6xl">🐛</p>
             <p className="font-futura text-lg uppercase text-white/60">Ready to squash some bugs?</p>
-            <div className="flex gap-5 text-xs text-white/35">
+            <div className="flex gap-5 text-xs text-white/60">
               <span>🐛 normal = +1</span>
               <span style={{ color: "#60a5fa" }}>fast = +2</span>
               <span style={{ color: "#ffcb05" }}>⭐ golden = +5</span>
@@ -200,22 +200,22 @@ const CatchTheBugGame = ({ onBack }) => {
               >
                 <p className="text-5xl">🏁</p>
                 <p className="font-futura text-4xl font-extrabold text-white">{caught} bugs</p>
-                <p className="font-futura text-sm text-white/40">{score} pts total</p>
+                <p className="font-futura text-sm text-white/70">{score} pts total</p>
                 <p className="font-futura text-base font-bold uppercase" style={{ color }}>
                   {label}
                 </p>
                 <div className="mt-1 grid w-48 grid-cols-3 text-center">
                   <div>
                     <p className="font-futura text-base font-bold text-white">{caught}</p>
-                    <p className="text-[10px] text-white/40">caught</p>
+                    <p className="text-[10px] text-white/70">caught</p>
                   </div>
                   <div>
                     <p className="font-futura text-base font-bold text-white">{missed}</p>
-                    <p className="text-[10px] text-white/40">missed</p>
+                    <p className="text-[10px] text-white/70">missed</p>
                   </div>
                   <div>
                     <p className="font-futura text-base font-bold text-white">{accuracy}%</p>
-                    <p className="text-[10px] text-white/40">accuracy</p>
+                    <p className="text-[10px] text-white/70">accuracy</p>
                   </div>
                 </div>
                 <PrimaryButton onClick={startGame} className="mt-2">Play Again</PrimaryButton>
