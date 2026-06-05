@@ -39,7 +39,7 @@
   },
   {
     "name": "Snake Game",
-    "description": "A classic Snake game where the player controls a growing snake and avoids colliding with its own body. Built with vanilla JavaScript, HTML Canvas, and Tailwind CSS.",
+    "description": "A modern arcade Snake game with progressive levels, power-ups, portals, maze mode, boss battles, and animated obstacles. Built with vanilla JavaScript, HTML Canvas, and Tailwind CSS.",
     "image": "snake-game.webp",
     "year": "2022",
     "link": "https://amin-abdillah-snake-game.vercel.app/"
